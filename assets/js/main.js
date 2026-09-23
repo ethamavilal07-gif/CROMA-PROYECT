@@ -191,7 +191,7 @@ function removeFromCart(cartId) {
 document.getElementById('whatsapp-send-btn').addEventListener('click', () => {
     if (cart.length === 0) return showToast("Tu carrito está vacío.");
     
-    const phoneNumber = "3221395546"; 
+    const phoneNumber = " 3221699890"; 
     let message = "¡Hola CROMA Project! Me interesa realizar el siguiente pedido:\n\n";
     
     cart.forEach((item, index) => {
