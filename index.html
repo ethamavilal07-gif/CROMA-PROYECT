@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CROMA Project | Sublimados Personalizados</title>
+    <!-- Fuentes Google: Playfair Display, Poppins y Caveat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+    <!-- AVISO NOTIFICACIÓN FLOTANTE (Toast) -->
+    <div id="toast-notification" class="toast"></div>
+
+    <!-- ENCABEZADO / HEADER -->
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="./assets/img/logo.png" alt="CROMA Project Logo" class="logo-img">
+            </a>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#catalogo">Catálogo</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <div class="ae-search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Búsquedas" onkeyup="filterProducts()">
+                </div>
+                <button id="cart-btn" class="btn-cart">
+                    🛒 Carrito (<span id="cart-count">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- CARRUSEL HORIZONTAL COMPLETO -->
+        <section class="banner-carousel" id="nosotros">
+            <div class="carousel-track-container">
+                <ul class="carousel-track" id="carousel-track">
+                    <li class="carousel-slide current-slide">
+                        <img src="assets/img/carrusel1.png" alt="Misión">
+                    </li>
+                    <li class="carousel-slide">
+                        <img src="assets/img/carrusel2.png" alt="Visión">
+                    </li>
+                    <li class="carousel-slide">
+                        <img src="assets/img/carrusel3.png" alt="Anticipo 50%">
+                    </li>
+                </ul>
+            </div>
+            <button class="carousel-arrow prev" onclick="moveSlide(-1)">&#10094;</button>
+            <button class="carousel-arrow next" onclick="moveSlide(1)">&#10095;</button>
+        </section>
+
+        <!-- BANNER DE FRASE PROMOCIONAL ALARGADO -->
+        <section class="quote-banner">
+            <div class="quote-container">
+                <p class="quote-serif">
+                    Y si alguien dice que dejes de comprar 
+                    <span class="highlight-pink">cosas personalizadas,</span>
+                </p>
+                <div class="quote-handwriting-wrapper">
+                    <p class="quote-handwriting">
+                        tú solo IGNORA.
+                        <span class="underline-brush"></span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN CATÁLOGO DE PRODUCTOS -->
+        <section class="catalog" id="catalogo">
+            <h2>Nuestros Productos</h2>
+            <div id="products-grid" class="products-grid">
+                <!-- Productos cargados dinámicamente por JavaScript -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE BOTONES INFORMATIVOS (ACCIONES AL FINAL) -->
+        <section class="info-buttons-section" id="contacto">
+            <div class="info-buttons-container">
+                <!-- Botón 1: WhatsApp -->
+                <a href="https://wa.me/5210000000000?text=¡Hola%20CROMA%20Project!%20🎨%20Estoy%20interesado/a%20en%20sus%20productos%20personalizados%20y%20me%20gustaría%20recibir%20más%20información." 
+                   target="_blank" 
+                   class="info-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">Chatea con nosotros</span>
+                </a>
+
+                <!-- Botón 2: Información del producto -->
+                <a href="#catalogo" class="info-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">Información del producto</span>
+                </a>
+
+                <!-- Botón 3: Preguntas frecuentes -->
+                <a href="https://wa.me/5210000000000?text=¡Hola!%20Tengo%20algunas%20preguntas%20sobre%20los%20envíos%20y%20tiempos%20de%20entrega." 
+                   target="_blank" 
+                   class="info-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">Preguntas frecuentes</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- MODAL DEL CARRITO -->
+        <div id="cart-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Tu Carrito de Compras</h2>
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <h3>Total: $<span id="cart-total-price">0</span> MXN</h3>
+                </div>
+                <button id="whatsapp-send-btn" class="btn-whatsapp">
+                    Enviar Pedido por WhatsApp 
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- PIE DE PÁGINA / FOOTER -->
+    <footer class="main-footer">
+        <h3>CROMA Project</h3>
+        <p>Sublimados y Productos Personalizados</p>
+        <p><small>&copy; 2026 Todos los derechos reservados.</small></p>
+    </footer>
+
+    <!-- JS de la aplicación -->
+    <script src="./assets/js/main.js"></script>
+</body>
+</html>
