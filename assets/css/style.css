@@ -556,9 +556,14 @@ h1, h2, h3 {
     }
 
     .main-header {
-        width: 100%;
-        padding: 8px 0;
-    }
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: fixed; /* Cambiado de sticky a fixed para asegurar fijación total */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
 
     .header-container {
         flex-direction: column;
