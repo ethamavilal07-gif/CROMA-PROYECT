@@ -551,10 +551,15 @@ h1, h2, h3 {
 @media (max-width: 768px) {
     /* Evitar que cualquier elemento cause scroll horizontal en el celular */
     html, body {
-        overflow-x: hidden;
-        width: 100%;
-    }
+    padding-top: 130px; /* Compensa la altura del header en escritorio */
+}
 
+/* Ajuste de espacio superior para dispositivos móviles */
+@media (max-width: 768px) {
+    body {
+        padding-top: 155px; /* Compensa la altura del header adaptado en celular */
+    }
+}
     .main-header {
     background-color: #FFFFFF;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
