@@ -545,3 +545,69 @@ h1, h2, h3 {
     max-height: 300px;
     border-top: 1px solid #EAEAEA;
 }
+/* ===================================================
+   ADAPTACIÓN RESPONSIVA PARA CELULARES (MOBILE)
+   =================================================== */
+@media (max-width: 768px) {
+    /* Evitar que cualquier elemento cause scroll horizontal en el celular */
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .main-header {
+        width: 100%;
+        padding: 8px 0;
+    }
+
+    .header-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+        width: 100%;
+    }
+
+    .logo-img {
+        height: 40px; /* Reducir un poco el tamaño del logo en celular */
+    }
+
+    .main-nav {
+        width: 100%;
+    }
+
+    .main-nav ul {
+        justify-content: center;
+        gap: 15px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .main-nav a {
+        font-size: 0.88rem;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 5px;
+        border-top: 1px solid #F0F0F0;
+    }
+
+    .ae-search-box {
+        flex: 1;
+        max-width: 200px;
+    }
+
+    .ae-search-box input {
+        width: 100% !important; /* Para que encaje dinámicamente sin salirse */
+        font-size: 0.85rem;
+    }
+
+    .btn-cart {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        white-space: nowrap; /* Evita que el texto del carrito se rompa en 2 líneas */
+    }
+}
