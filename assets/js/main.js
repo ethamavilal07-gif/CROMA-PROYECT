@@ -102,6 +102,29 @@ const products = [
             "assets/img/totebags/totebag8.png",
             "assets/img/totebags/totebag9.png"
         ]
+    },
+    {
+        id: 6,
+        name: "Playera Tipo Polo Personalizada",
+        price: 300,
+        image: "assets/img/polo.png",
+        description: "Playera ligera, cómoda y resistente, ideal para personalizar con diseños únicos. Su tela de poliéster permite una buena impresión de colores y detalles, además de ser una opción práctica para el uso diario, eventos, equipos o uniformes.",
+        sizes: ["CH", "M", "G", "XG", "2XL"],
+        colors: ["Negro", "Blanco", "Azul Marino", "Gris"],
+        gallery: [
+            "assets/img/polo/playera1.png",
+            "assets/img/polo/playera2.png",
+            "assets/img/polo/playera3.png",
+            "assets/img/polo/playera4.png",
+            "assets/img/polo/playera5.png",
+            "assets/img/polo/playera6.png",
+            "assets/img/polo/playera7.png",
+            "assets/img/polo/playera8.png",
+            "assets/img/polo/playera9.png",
+            "assets/img/polo/playera10.png",
+            "assets/img/polo/playera11.png",
+            "assets/img/polo/playera12.png"
+        ]
     }
 ];
 
@@ -109,6 +132,7 @@ const products = [
 let cart = JSON.parse(localStorage.getItem('croma_cart')) || [];
 let galleryTimer = null;
 let currentGalleryPosition = 0;
+
 
 // FUNCIONES DE UTILIDAD Y REDIRECCIÓN
 function saveCart() {
@@ -208,25 +232,18 @@ function renderProductDetailPage() {
         colorSelect.innerHTML = product.colors.map(c => `<option value="${c}">${c}</option>`).join('');
     }
 
-    // --- CONTROL DE VISIBILIDAD DE CAMPOS ESPECIALES ---
-    const grupoGenero = document.getElementById('grupo-corte-genero');
-    const grupoTipoPlayera = document.getElementById('grupo-tipo-playera');
+    // --- EVALUAR SI REQUIERE SELECTOR DE GÉNERO ("¿Para quién es la prenda?") ---
+    const esPrendaConGenero = product.id === 1 || product.id === 2 || product.name.toLowerCase().includes("polo");
 
-    // 1. "¿Para quién es la prenda?" solo se muestra en Playeras (id: 1) y Hoodies (id: 2)
+    // --- CONTROL STRICTO DE VISIBILIDAD DE CAMPOS ESPECIALES ---
+    const grupoGenero = document.getElementById('grupo-corte-genero');
+
+    // 1. "¿Para quién es la prenda?": Playera Básica (ID 1), Hoodie (ID 2) o cualquier Polo
     if (grupoGenero) {
-        if (product.id === 1 || product.id === 2) {
+        if (esPrendaConGenero) {
             grupoGenero.style.display = 'block';
         } else {
             grupoGenero.style.display = 'none';
-        }
-    }
-
-    // 2. "Selecciona Tipo de Playera" solo se muestra en Playera Básico (id: 1)
-    if (grupoTipoPlayera) {
-        if (product.id === 1) {
-            grupoTipoPlayera.style.display = 'block';
-        } else {
-            grupoTipoPlayera.style.display = 'none';
         }
     }
 
@@ -261,11 +278,11 @@ function renderProductDetailPage() {
             const customInput = document.getElementById('detail-custom');
             const customText = customInput && customInput.value.trim() ? customInput.value.trim() : "Sin detalle especificado";
 
-            // Capturar la opción de género solo si aplica (Playera / Hoodie)
+            // Capturar la opción de género solo si aplica (Playera, Hoodie o Polo)
             const elGenero = document.getElementById('corte-genero');
             let generoSeleccionado = '';
 
-            if (elGenero && (product.id === 1 || product.id === 2)) {
+            if (elGenero && esPrendaConGenero) {
                 generoSeleccionado = elGenero.value;
                 if (!generoSeleccionado) {
                     showToast("⚠️ Por favor selecciona para quién es la prenda.");
@@ -297,7 +314,7 @@ function renderProductDetailPage() {
     }
 }
 
-// LÓGICA DEL CARRUSEL AUTOMÁTICO EN LOOP INFINITO
+// LÓGICA DEL CARRUSEL AUTOMÁTICO EN LOOP INFINITO (MUESTRAS)
 function moveGallerySlide(direction) {
     const track = document.getElementById('gallery-carousel-track');
     if (!track) return;
@@ -332,12 +349,77 @@ function stopGalleryAutoScroll() {
     }
 }
 
-// BÚSQUEDA INTELIGENTE CON SINÓNIMOS Y ERRORES COMUNES (SIN FALLOS DE RENDER)
+// LÓGICA DEL CARRUSEL PRINCIPAL (index.html) - CORREGIDO
+let heroCurrentSlide = 0;
+let heroTimer = null;
+
+function moveSlide(direction) {
+    const track = document.getElementById('carousel-track');
+    if (!track) return;
+
+    const slides = track.querySelectorAll('.carousel-slide');
+    if (slides.length === 0) return;
+
+    // Calcular la dirección
+    heroCurrentSlide += direction;
+
+    if (heroCurrentSlide >= slides.length) {
+        heroCurrentSlide = 0;
+    } else if (heroCurrentSlide < 0) {
+        heroCurrentSlide = slides.length - 1;
+    }
+
+    // Obtener el ancho exacto del contenedor contenedor visible
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    
+    // Mover la pista en píxeles exactos
+    track.style.transform = `translateX(-${heroCurrentSlide * slideWidth}px)`;
+
+    // Actualizar clases
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('current-slide', index === heroCurrentSlide);
+    });
+}
+
+function startHeroAutoScroll() {
+    stopHeroAutoScroll();
+    heroTimer = setInterval(() => {
+        moveSlide(1);
+    }, 4000);
+}
+
+function stopHeroAutoScroll() {
+    if (heroTimer) {
+        clearInterval(heroTimer);
+        heroTimer = null;
+    }
+}
+
+function initHeroCarousel() {
+    const track = document.getElementById('carousel-track');
+    if (!track) return;
+
+    heroCurrentSlide = 0;
+    track.style.transform = 'translateX(0px)';
+    
+    // Iniciar auto-scroll
+    startHeroAutoScroll();
+
+    // Pausar con el cursor
+    const banner = document.querySelector('.banner-carousel');
+    if (banner) {
+        banner.onmouseenter = stopHeroAutoScroll;
+        banner.onmouseleave = startHeroAutoScroll;
+    }
+
+    // Ajustar si la ventana cambia de tamaño
+    window.addEventListener('resize', () => moveSlide(0));
+}
+// BÚSQUEDA INTELIGENTE CON SINÓNIMOS Y ERRORES COMUNES
 function filterProducts() {
     const input = document.getElementById('search-input');
     if (!input) return;
 
-    // Función para limpiar texto (quitar acentos, mayúsculas y símbolos)
     const normalize = (text) => {
         return (text || '')
             .toLowerCase()
@@ -346,7 +428,6 @@ function filterProducts() {
             .replace(/[^a-z0-9\s]/g, "");
     };
 
-    // Diccionario de equivalencias y términos coloquiales
     const synonyms = {
         'judi': 'hoodie',
         'hudi': 'hoodie',
@@ -370,17 +451,14 @@ function filterProducts() {
 
     const queryRaw = input.value.trim();
 
-    // Si el buscador está vacío, vuelve a mostrar todos los productos
     if (queryRaw === '') {
         renderHomeProducts(products);
         return;
     }
 
     const queryClean = normalize(queryRaw);
-    // Si la búsqueda (o parte de ella) existe en el diccionario, usa la palabra clave traducid
     const searchTerm = synonyms[queryClean] || queryClean;
 
-    // Filtrar productos
     const filtered = products.filter(p => {
         const nameClean = normalize(p.name);
         const descClean = normalize(p.description);
@@ -388,10 +466,8 @@ function filterProducts() {
         return nameClean.includes(searchTerm) || descClean.includes(searchTerm);
     });
 
-    // Renderizar resultados
     renderHomeProducts(filtered);
 
-    // Si no hay coincidencias, mostrar mensaje de aviso
     const grid = document.getElementById('products-grid') || document.getElementById('home-products-grid');
     if (grid && filtered.length === 0) {
         grid.innerHTML = `
@@ -503,4 +579,5 @@ document.addEventListener("DOMContentLoaded", () => {
     renderFullCatalog();
     renderProductDetailPage();
     initFAQAccordion();
+    initHeroCarousel();
 });
