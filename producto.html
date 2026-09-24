@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizar Producto | CROMA Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+    <div id="toast-notification" class="toast"></div>
+
+    <!-- ENCABEZADO / HEADER -->
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="./assets/img/logo.png" alt="CROMA Project Logo" class="logo-img">
+            </a>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html#nosotros">Nosotros</a></li>
+                    <li><a href="catalogo.html">Catálogo</a></li>
+                    <li><a href="index.html#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <button id="cart-btn" class="btn-cart">
+                    🛒 Carrito (<span id="cart-count">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        
+        <!-- VISTA DE DETALLE DE PRODUCTO TIPO E-COMMERCE -->
+        <div class="product-detail-layout" style="display: grid; grid-template-columns: 1fr 1fr 300px; gap: 30px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); align-items: start;">
+            
+            <!-- COLUMNA IZQUIERDA: IMAGEN DEL PRODUCTO -->
+            <div class="detail-image-container" style="text-align: center;">
+                <img id="detail-img" src="" alt="Producto" style="width: 100%; max-width: 380px; height: auto; border-radius: 8px;">
+            </div>
+
+            <!-- COLUMNA CENTRO: INFORMACIÓN Y OPCIONES -->
+            <div class="detail-info-container">
+                <h1 id="detail-title" style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #2b2b2b; margin-bottom: 10px;">Cargando...</h1>
+                <p id="detail-price-mobile" class="product-price" style="font-size: 1.5rem; color: #6b1d2f; font-weight: 600; margin-bottom: 20px;">$0 MXN</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 6px;">Selecciona Tu Talla:</label>
+                    <select id="detail-size" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Poppins', sans-serif;"></select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 6px;">Selecciona El Color:</label>
+                    <select id="detail-color" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Poppins', sans-serif;"></select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 6px;">Detalle / Frase de tu diseño:</label>
+                    <textarea id="detail-custom" rows="4" placeholder="Escribe aquí tu frase, idea, nombre o especificaciones de la imagen a sublimar..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Poppins', sans-serif; resize: vertical; box-sizing: border-box;"></textarea>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: TARJETA DE COMPRA -->
+            <div class="detail-action-card" style="border: 1px solid #e2e2e2; padding: 20px; border-radius: 10px; background: #fafafa; text-align: center;">
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 5px;">Precio total</p>
+                <h2 id="detail-price-card" style="color: #6b1d2f; margin-bottom: 15px; font-size: 2rem;">$0 MXN</h2>
+                <p style="color: #27ae60; font-weight: 600; font-size: 0.85rem; margin-bottom: 20px;">✓ Stock disponible para sublimación</p>
+                
+                <button id="add-to-cart-detail-btn" class="btn-add" style="width: 100%; padding: 12px; font-size: 1rem; cursor: pointer;">
+                    🛒 Agregar al carrito
+                </button>
+            </div>
+
+        </div>
+
+       <!-- SECCIÓN INFERIOR: CARRUSEL DE TRABAJOS REALIZADOS (DINÁMICO) -->
+        <section style="margin-top: 50px;">
+            <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 10px;">Trabajos Realizados & Inspiración</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 25px;">Así quedan algunos de nuestros pedidos entregados:</p>
+            
+            <div class="gallery-carousel-wrapper" style="position: relative; max-width: 900px; margin: 0 auto; overflow: hidden; padding: 10px 40px;">
+                <!-- Botón Anterior -->
+                <button id="prev-gallery-btn" onclick="moveGallerySlide(-1)" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); background: #6b1d2f; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold; font-size: 1.1rem;">❮</button>
+
+                <!-- Track Contenedor -->
+                <div id="gallery-carousel-track" style="display: flex; gap: 15px; transition: transform 0.4s ease-in-out;">
+                    <!-- Se cargan dinámicamente con JS de acuerdo al producto seleccionado -->
+                </div>
+
+                <!-- Botón Siguiente -->
+                <button id="next-gallery-btn" onclick="moveGallerySlide(1)" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: #6b1d2f; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold; font-size: 1.1rem;">❯</button>
+            </div>
+        </section>
+
+        <!-- MODAL DEL CARRITO -->
+        <div id="cart-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Tu Carrito de Compras</h2>
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <h3>Total: $<span id="cart-total-price">0</span> MXN</h3>
+                </div>
+                <button id="whatsapp-send-btn" class="btn-whatsapp">
+                    Enviar Pedido por WhatsApp 📲
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="main-footer">
+        <h3>CROMA Project</h3>
+        <p>Sublimados y Productos Personalizados</p>
+        <p><small>&copy; 2026 Todos los derechos reservados.</small></p>
+    </footer>
+
+    <script src="./assets/js/main.js"></script>
+</body>
+</html>

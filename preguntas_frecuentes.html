@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Frecuentes | CROMA Project</title>
+    
+    <!-- Tipografías de tu proyecto -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tu archivo de estilos -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <!-- HEADER IGUAL A TU INDEX/CATÁLOGO -->
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo.png" alt="CROMA Project" class="logo-img">
+            </a>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html#nosotros">Nosotros</a></li>
+                    <li><a href="catalogo.html">Catálogo</a></li>
+                    <li><a href="index.html#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <div class="ae-search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Búsquedas">
+                </div>
+                <button class="btn-cart">🛒 Carrito (0)</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- PREGUNTAS FRECUENTES -->
+    <main class="faq-wrapper-page">
+        <h1 class="faq-page-title">Preguntas Frecuentes</h1>
+
+        <div class="faq-accordion-container">
+            <div class="faq-accordion-card">
+                <button class="faq-accordion-btn">
+                    <span>¿Puedo personalizar un producto con mi propio diseño?</span>
+                    <span class="faq-accordion-icon">›</span>
+                </button>
+                <div class="faq-accordion-body">
+                    <p>¡Claro! En CROMA Project queremos que tu imaginación vuele. Puedes mandarnos a nuestro WhatsApp tu propia idea, diseño, frase o imagen y nosotros la convertimos en algo que puedas llevar contigo, regalar, etc.</p>
+                </div>
+            </div>
+
+            <div class="faq-accordion-card">
+                <button class="faq-accordion-btn">
+                    <span>¿Con cuánto tiempo de anticipación debo realizar mi pedido?</span>
+                    <span class="faq-accordion-icon">›</span>
+                </button>
+                <div class="faq-accordion-body">
+                    <p>Recomendamos realizar tu pedido con 4 a 5 días de anticipación (dependiendo de la cantidad y personalización).</p>
+                </div>
+            </div>
+
+            <div class="faq-accordion-card">
+                <button class="faq-accordion-btn">
+                    <span>¿Qué métodos de pago aceptan?</span>
+                    <span class="faq-accordion-icon">›</span>
+                </button>
+                <div class="faq-accordion-body">
+                    <p>Aceptamos transferencias y efectivo.</p>
+                </div>
+            </div>
+
+            <div class="faq-accordion-card">
+                <button class="faq-accordion-btn">
+                    <span>¿Cuentan con envío o dónde puedo recoger mi pedido?</span>
+                    <span class="faq-accordion-icon">›</span>
+                </button>
+                <div class="faq-accordion-body">
+                    <p>Sí, contamos con envíos a todo México o puede recogerlo en Universidad Tecnológica de Bahía de Banderas.</p>
+                </div>
+            </div>
+
+            <div class="faq-accordion-card">
+                <button class="faq-accordion-btn">
+                    <span>¿Manejan precios al mayoreo?</span>
+                    <span class="faq-accordion-icon">›</span>
+                </button>
+                <div class="faq-accordion-body">
+                    <p>Sí, dependiendo del producto y de la cantidad que necesite, se les hace un descuento.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER IGUAL A TU PROYECTO -->
+    <footer class="main-footer">
+        <h3>CROMA Project</h3>
+        <p>Sublimados y Productos Personalizados</p>
+        <p>&copy; 2026 Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- SCRIPT DESPLEGABLE -->
+    <script>
+        document.querySelectorAll('.faq-accordion-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.parentElement;
+                const isOpen = card.classList.contains('active');
+
+                // Cerrar las demás preguntas
+                document.querySelectorAll('.faq-accordion-card').forEach(c => c.classList.remove('active'));
+
+                // Abrir o cerrar la actual
+                if (!isOpen) {
+                    card.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
