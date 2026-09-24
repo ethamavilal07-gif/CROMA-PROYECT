@@ -16,7 +16,11 @@ const products = [
             "assets/img/playeras/playera5.png",
             "assets/img/playeras/playera6.png",
             "assets/img/playeras/playera7.png",
-            "assets/img/playeras/playera8.png"
+            "assets/img/playeras/playera8.png",
+            "assets/img/playeras/playera9.png",
+            "assets/img/playeras/playera10.png",
+            "assets/img/playeras/playera11.png",
+            "assets/img/playeras/playera12.png"
         ]
     },
     {
@@ -34,7 +38,12 @@ const products = [
             "assets/img/hoodies/hoodie4.png",
             "assets/img/hoodies/hoodie5.png",
             "assets/img/hoodies/hoodie6.png",
-            "assets/img/hoodies/hoodie7.png"
+            "assets/img/hoodies/hoodie7.png",
+            "assets/img/hoodies/hoodie8.png",
+            "assets/img/hoodies/hoodie9.png",
+            "assets/img/hoodies/hoodie10.png",
+            "assets/img/hoodies/hoodie11.png"
+            
         ]
     },
     {
@@ -51,7 +60,12 @@ const products = [
             "assets/img/tazas/taza3.png",
             "assets/img/tazas/taza4.png",
             "assets/img/tazas/taza5.png",
-            "assets/img/tazas/taza6.png"
+            "assets/img/tazas/taza6.png",
+            "assets/img/tazas/taza7.png",
+            "assets/img/tazas/taza8.png",
+            "assets/img/tazas/taza9.png",
+            "assets/img/tazas/taza10.png",
+            "assets/img/tazas/taza11.png"
         ]
     },
     {
@@ -65,7 +79,8 @@ const products = [
         gallery: [
             "assets/img/gorras/gorra1.png",
             "assets/img/gorras/gorra2.png",
-            "assets/img/gorras/gorra3.png"
+            "assets/img/gorras/gorra3.png",
+            "assets/img/gorras/gorra4.png"
         ]
     },
     {
@@ -80,7 +95,12 @@ const products = [
             "assets/img/totebags/totebag1.png",
             "assets/img/totebags/totebag2.png",
             "assets/img/totebags/totebag3.png",
-            "assets/img/totebags/totebag4.png"
+            "assets/img/totebags/totebag4.png",
+            "assets/img/totebags/totebag5.png",
+            "assets/img/totebags/totebag6.png",
+            "assets/img/totebags/totebag7.png",
+            "assets/img/totebags/totebag8.png",
+            "assets/img/totebags/totebag9.png"
         ]
     }
 ];
@@ -312,12 +332,12 @@ function stopGalleryAutoScroll() {
     }
 }
 
-// BÚSQUEDA TOLERANTE A ERRORES DE ORTOGRAFÍA (Z/S, B/V, C/S, ACENTOS)
+// BÚSQUEDA INTELIGENTE CON SINÓNIMOS Y ERRORES COMUNES (SIN FALLOS DE RENDER)
 function filterProducts() {
     const input = document.getElementById('search-input');
     if (!input) return;
 
-    // 1. Limpiar texto (quitar acentos, mayúsculas y caracteres especiales)
+    // Función para limpiar texto (quitar acentos, mayúsculas y símbolos)
     const normalize = (text) => {
         return (text || '')
             .toLowerCase()
@@ -326,76 +346,52 @@ function filterProducts() {
             .replace(/[^a-z0-9\s]/g, "");
     };
 
-    // 2. Normalizar fonética para errores comunes en español (Z/C -> S, V -> B)
-    const phoneticNormalize = (text) => {
-        return normalize(text)
-            .replace(/z/g, 's')
-            .replace(/c(?=[ei])/g, 's')
-            .replace(/v/g, 'b');
-    };
-
-    // 3. Algoritmo para medir qué tan parecidas son dos palabras
-    const getSimilarity = (a, b) => {
-        if (a.length === 0) return b.length;
-        if (b.length === 0) return a.length;
-        const matrix = [];
-        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-
-        for (let i = 1; i <= b.length; i++) {
-            for (let j = 1; j <= a.length; j++) {
-                if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                    matrix[i][j] = matrix[i - 1][j - 1];
-                } else {
-                    matrix[i][j] = Math.min(
-                        matrix[i - 1][j - 1] + 1,
-                        matrix[i][j - 1] + 1,
-                        matrix[i - 1][j] + 1
-                    );
-                }
-            }
-        }
-        return matrix[b.length][a.length];
+    // Diccionario de equivalencias y términos coloquiales
+    const synonyms = {
+        'judi': 'hoodie',
+        'hudi': 'hoodie',
+        'jodi': 'hoodie',
+        'sudadera': 'hoodie',
+        'chamarra': 'hoodie',
+        'tasa': 'taza',
+        'tasas': 'taza',
+        'tacas': 'taza',
+        'vaso': 'taza',
+        'polera': 'playera',
+        'remera': 'playera',
+        'camiseta': 'playera',
+        'polo': 'playera',
+        'gorras': 'gorra',
+        'cachucha': 'gorra',
+        'totebag': 'tote bag',
+        'bolsa': 'tote bag',
+        'bolso': 'tote bag'
     };
 
     const queryRaw = input.value.trim();
+
+    // Si el buscador está vacío, vuelve a mostrar todos los productos
     if (queryRaw === '') {
         renderHomeProducts(products);
         return;
     }
 
     const queryClean = normalize(queryRaw);
-    const queryPhonetic = phoneticNormalize(queryRaw);
+    // Si la búsqueda (o parte de ella) existe en el diccionario, usa la palabra clave traducid
+    const searchTerm = synonyms[queryClean] || queryClean;
 
+    // Filtrar productos
     const filtered = products.filter(p => {
         const nameClean = normalize(p.name);
-        const namePhonetic = phoneticNormalize(p.name);
         const descClean = normalize(p.description);
-        const descPhonetic = phoneticNormalize(p.description);
 
-        // A) Coincidencia directa o fonética (Ejemplo: "tasas" encuentra "taza")
-        if (nameClean.includes(queryClean) || namePhonetic.includes(queryPhonetic) ||
-            descClean.includes(queryClean) || descPhonetic.includes(queryPhonetic)) {
-            return true;
-        }
-
-        // B) Tolerancia a errores de escritura (palabras parecidas)
-        const queryWords = queryClean.split(/\s+/);
-        const nameWords = nameClean.split(/\s+/);
-
-        return queryWords.some(qWord => {
-            if (qWord.length < 3) return false; // Ignorar palabras de 1 o 2 letras
-            return nameWords.some(nWord => {
-                const distance = getSimilarity(qWord, nWord);
-                // Permite hasta 2 letras de diferencia para palabras medianas
-                return distance <= (qWord.length > 5 ? 2 : 1);
-            });
-        });
+        return nameClean.includes(searchTerm) || descClean.includes(searchTerm);
     });
 
+    // Renderizar resultados
     renderHomeProducts(filtered);
 
-    // Mensaje opcional cuando no se encuentra ningún resultado
+    // Si no hay coincidencias, mostrar mensaje de aviso
     const grid = document.getElementById('products-grid') || document.getElementById('home-products-grid');
     if (grid && filtered.length === 0) {
         grid.innerHTML = `
