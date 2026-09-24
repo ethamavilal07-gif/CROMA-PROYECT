@@ -37,7 +37,25 @@
     </header>
 
     <main style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
-        
+        <!-- SECCIÓN INFERIOR: CARRUSEL DE TRABAJOS REALIZADOS (DINÁMICO) -->
+        <section style="margin-top: 50px;">
+            <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 10px;">Trabajos Realizados & Inspiración</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 25px;">Así quedan algunos de nuestros pedidos entregados:</p>
+            
+            <div class="gallery-carousel-wrapper" style="position: relative; max-width: 900px; margin: 0 auto; overflow: hidden; padding: 10px 40px;">
+                <!-- Botón Anterior -->
+                <button id="prev-gallery-btn" onclick="moveGallerySlide(-1)" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); background: #6b1d2f; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold; font-size: 1.1rem;">❮</button>
+
+                <!-- Track Contenedor -->
+                <div id="gallery-carousel-track" style="display: flex; gap: 15px; transition: transform 0.4s ease-in-out;">
+                    <!-- Se cargan dinámicamente con JS de acuerdo al producto seleccionado -->
+                </div>
+
+                <!-- Botón Siguiente -->
+                <button id="next-gallery-btn" onclick="moveGallerySlide(1)" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: #6b1d2f; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold; font-size: 1.1rem;">❯</button>
+            </div>
+        </section>
+
         <!-- VISTA DE DETALLE DE PRODUCTO TIPO E-COMMERCE -->
         <div class="product-detail-layout" style="display: grid; grid-template-columns: 1fr 1fr 300px; gap: 30px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); align-items: start;">
             
@@ -61,6 +79,26 @@
                     <label style="font-weight: 600; display: block; margin-bottom: 6px;">Selecciona El Color:</label>
                     <select id="detail-color" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Poppins', sans-serif;"></select>
                 </div>
+                
+                <!-- Campo Género (Solo para Playeras y Hoodies) -->
+<div class="form-group" id="grupo-corte-genero">
+    <label for="corte-genero">¿Para quién es la prenda?:</label>
+    <select id="corte-genero" class="form-control">
+        <option value="" disabled selected>Selecciona una opción</option>
+        <option value="Hombre">Hombre (Corte Recto)</option>
+        <option value="Mujer">Mujer (Corte Silueteado)</option>
+        <option value="Niño / Niña">Niño / Niña (Infantil)</option>
+    </select>
+</div>
+
+<!-- Campo Tipo de Playera (Solo para Playera Básico ID 1) -->
+<div class="form-group" id="grupo-tipo-playera">
+    <label for="tipo-playera">Selecciona Tipo de Playera:</label>
+    <select id="tipo-playera" class="form-control">
+        <option value="Playera Básica (Cuello Redondo)">Playera Básica (Cuello Redondo)</option>
+        <option value="Tipo Polo">Tipo Polo</option>
+    </select>
+</div>
 
                 <div class="form-group" style="margin-bottom: 18px;">
                     <label style="font-weight: 600; display: block; margin-bottom: 6px;">Detalle / Frase de tu diseño:</label>
@@ -81,24 +119,7 @@
 
         </div>
 
-       <!-- SECCIÓN INFERIOR: CARRUSEL DE TRABAJOS REALIZADOS (DINÁMICO) -->
-        <section style="margin-top: 50px;">
-            <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 10px;">Trabajos Realizados & Inspiración</h2>
-            <p style="text-align: center; color: #666; margin-bottom: 25px;">Así quedan algunos de nuestros pedidos entregados:</p>
-            
-            <div class="gallery-carousel-wrapper" style="position: relative; max-width: 900px; margin: 0 auto; overflow: hidden; padding: 10px 40px;">
-                <!-- Botón Anterior -->
-                <button id="prev-gallery-btn" onclick="moveGallerySlide(-1)" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); background: #6b1d2f; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold; font-size: 1.1rem;">❮</button>
-
-                <!-- Track Contenedor -->
-                <div id="gallery-carousel-track" style="display: flex; gap: 15px; transition: transform 0.4s ease-in-out;">
-                    <!-- Se cargan dinámicamente con JS de acuerdo al producto seleccionado -->
-                </div>
-
-                <!-- Botón Siguiente -->
-                <button id="next-gallery-btn" onclick="moveGallerySlide(1)" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: #6b1d2f; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold; font-size: 1.1rem;">❯</button>
-            </div>
-        </section>
+       
 
         <!-- MODAL DEL CARRITO -->
         <div id="cart-modal" class="modal">

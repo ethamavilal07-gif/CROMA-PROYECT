@@ -66,7 +66,6 @@ const products = [
             "assets/img/gorras/gorra1.png",
             "assets/img/gorras/gorra2.png",
             "assets/img/gorras/gorra3.png"
-           
         ]
     },
     {
@@ -171,15 +170,45 @@ function renderProductDetailPage() {
     document.getElementById('detail-img').src = product.image;
     document.getElementById('detail-img').alt = product.name;
     titleEl.innerText = product.name;
-    document.getElementById('detail-price-mobile').innerText = `$${product.price} MXN`;
-    document.getElementById('detail-price-card').innerText = `$${product.price} MXN`;
+    
+    const priceMobile = document.getElementById('detail-price-mobile');
+    if (priceMobile) priceMobile.innerText = `$${product.price} MXN`;
+    
+    const priceCard = document.getElementById('detail-price-card');
+    if (priceCard) priceCard.innerText = `$${product.price} MXN`;
 
     // Cargar Tallas y Colores
     const sizeSelect = document.getElementById('detail-size');
-    sizeSelect.innerHTML = product.sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+    if (sizeSelect) {
+        sizeSelect.innerHTML = product.sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
 
     const colorSelect = document.getElementById('detail-color');
-    colorSelect.innerHTML = product.colors.map(c => `<option value="${c}">${c}</option>`).join('');
+    if (colorSelect) {
+        colorSelect.innerHTML = product.colors.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    // --- CONTROL DE VISIBILIDAD DE CAMPOS ESPECIALES ---
+    const grupoGenero = document.getElementById('grupo-corte-genero');
+    const grupoTipoPlayera = document.getElementById('grupo-tipo-playera');
+
+    // 1. "¿Para quién es la prenda?" solo se muestra en Playeras (id: 1) y Hoodies (id: 2)
+    if (grupoGenero) {
+        if (product.id === 1 || product.id === 2) {
+            grupoGenero.style.display = 'block';
+        } else {
+            grupoGenero.style.display = 'none';
+        }
+    }
+
+    // 2. "Selecciona Tipo de Playera" solo se muestra en Playera Básico (id: 1)
+    if (grupoTipoPlayera) {
+        if (product.id === 1) {
+            grupoTipoPlayera.style.display = 'block';
+        } else {
+            grupoTipoPlayera.style.display = 'none';
+        }
+    }
 
     // Cargar Carrusel de Trabajos Realizados
     const track = document.getElementById('gallery-carousel-track');
@@ -194,10 +223,8 @@ function renderProductDetailPage() {
             track.appendChild(item);
         });
 
-        // Iniciar desplazamiento automático
         startGalleryAutoScroll();
 
-        // Control del mouse (pausar al colocar el cursor encima)
         const wrapper = document.querySelector('.gallery-carousel-wrapper');
         if (wrapper) {
             wrapper.onmouseenter = stopGalleryAutoScroll;
@@ -209,19 +236,41 @@ function renderProductDetailPage() {
     const addBtn = document.getElementById('add-to-cart-detail-btn');
     if (addBtn) {
         addBtn.onclick = () => {
-            const selectedSize = sizeSelect.value;
-            const selectedColor = colorSelect.value;
-            const customText = document.getElementById('detail-custom').value.trim() || "Sin detalle especificado";
+            const selectedSize = sizeSelect ? sizeSelect.value : 'Única';
+            const selectedColor = colorSelect ? colorSelect.value : 'Estándar';
+            const customInput = document.getElementById('detail-custom');
+            const customText = customInput && customInput.value.trim() ? customInput.value.trim() : "Sin detalle especificado";
 
-            cart.push({
+            // Capturar la opción de género solo si aplica (Playera / Hoodie)
+            const elGenero = document.getElementById('corte-genero');
+            let generoSeleccionado = '';
+
+            if (elGenero && (product.id === 1 || product.id === 2)) {
+                generoSeleccionado = elGenero.value;
+                if (!generoSeleccionado) {
+                    showToast("⚠️ Por favor selecciona para quién es la prenda.");
+                    return;
+                }
+            }
+
+            // Capturar la opción de Tipo de Playera solo si aplica (Playera Básico)
+            const elTipo = document.getElementById('tipo-playera');
+            let tipoSeleccionado = '';
+            if (elTipo && product.id === 1) {
+                tipoSeleccionado = elTipo.value;
+            }
+
+            const productoParaCarrito = {
                 cartId: Date.now(),
-                name: product.name,
+                name: product.name + (tipoSeleccionado ? ` (${tipoSeleccionado})` : ''),
                 price: product.price,
                 size: selectedSize,
                 color: selectedColor,
-                custom: customText
-            });
+                custom: customText,
+                ...(generoSeleccionado && { genero: generoSeleccionado })
+            };
 
+            cart.push(productoParaCarrito);
             saveCart();
             showToast(`¡${product.name} agregado al carrito! ✨`);
         };
@@ -233,19 +282,16 @@ function moveGallerySlide(direction) {
     const track = document.getElementById('gallery-carousel-track');
     if (!track) return;
 
-    const step = 200; // Distancia en píxeles de cada avance
+    const step = 200;
     const maxScroll = track.scrollWidth - track.clientWidth;
 
     if (maxScroll <= 0) return;
 
     currentGalleryPosition += direction * step;
 
-    // Si llega al final o se pasa, regresa al inicio (Loop)
     if (currentGalleryPosition > maxScroll) {
         currentGalleryPosition = 0;
-    } 
-    // Si regresa antes del inicio, salta al final
-    else if (currentGalleryPosition < 0) {
+    } else if (currentGalleryPosition < 0) {
         currentGalleryPosition = maxScroll;
     }
 
@@ -266,13 +312,99 @@ function stopGalleryAutoScroll() {
     }
 }
 
-// BÚSQUEDA EN PÁGINA PRINCIPAL
+// BÚSQUEDA TOLERANTE A ERRORES DE ORTOGRAFÍA (Z/S, B/V, C/S, ACENTOS)
 function filterProducts() {
     const input = document.getElementById('search-input');
     if (!input) return;
-    const query = input.value.toLowerCase().trim();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+
+    // 1. Limpiar texto (quitar acentos, mayúsculas y caracteres especiales)
+    const normalize = (text) => {
+        return (text || '')
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9\s]/g, "");
+    };
+
+    // 2. Normalizar fonética para errores comunes en español (Z/C -> S, V -> B)
+    const phoneticNormalize = (text) => {
+        return normalize(text)
+            .replace(/z/g, 's')
+            .replace(/c(?=[ei])/g, 's')
+            .replace(/v/g, 'b');
+    };
+
+    // 3. Algoritmo para medir qué tan parecidas son dos palabras
+    const getSimilarity = (a, b) => {
+        if (a.length === 0) return b.length;
+        if (b.length === 0) return a.length;
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    };
+
+    const queryRaw = input.value.trim();
+    if (queryRaw === '') {
+        renderHomeProducts(products);
+        return;
+    }
+
+    const queryClean = normalize(queryRaw);
+    const queryPhonetic = phoneticNormalize(queryRaw);
+
+    const filtered = products.filter(p => {
+        const nameClean = normalize(p.name);
+        const namePhonetic = phoneticNormalize(p.name);
+        const descClean = normalize(p.description);
+        const descPhonetic = phoneticNormalize(p.description);
+
+        // A) Coincidencia directa o fonética (Ejemplo: "tasas" encuentra "taza")
+        if (nameClean.includes(queryClean) || namePhonetic.includes(queryPhonetic) ||
+            descClean.includes(queryClean) || descPhonetic.includes(queryPhonetic)) {
+            return true;
+        }
+
+        // B) Tolerancia a errores de escritura (palabras parecidas)
+        const queryWords = queryClean.split(/\s+/);
+        const nameWords = nameClean.split(/\s+/);
+
+        return queryWords.some(qWord => {
+            if (qWord.length < 3) return false; // Ignorar palabras de 1 o 2 letras
+            return nameWords.some(nWord => {
+                const distance = getSimilarity(qWord, nWord);
+                // Permite hasta 2 letras de diferencia para palabras medianas
+                return distance <= (qWord.length > 5 ? 2 : 1);
+            });
+        });
+    });
+
     renderHomeProducts(filtered);
+
+    // Mensaje opcional cuando no se encuentra ningún resultado
+    const grid = document.getElementById('products-grid') || document.getElementById('home-products-grid');
+    if (grid && filtered.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">
+                <p style="font-size: 1.2rem; margin-bottom: 8px;">No encontramos productos para "<strong>${input.value}</strong>"</p>
+                <small>Intenta buscar por: Playera, Hoodie, Taza, Gorra o Tote Bag.</small>
+            </div>
+        `;
+    }
 }
 
 // CARRITO DE COMPRAS Y ACTUALIZACIÓN DE UI
@@ -294,9 +426,10 @@ function updateCartUI() {
         div.innerHTML = `
             <div>
                 <strong>${item.name}</strong><br>
+                ${item.genero ? `<small>Para: <strong>${item.genero}</strong></small><br>` : ''}
                 <small>Talla: ${item.size} | Color: ${item.color}</small><br>
                 <small><em>${item.custom}</em></small><br>
-                <span>$${item.price} MXN</span>
+                <span style="color: #6b1d2f; font-weight: 600;">$${item.price} MXN</span>
             </div>
             <button onclick="removeFromCart(${item.cartId})" style="background:#ff4d4d; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">X</button>
         `;
@@ -320,10 +453,11 @@ if (whatsappBtn) {
         if (cart.length === 0) return showToast("Tu carrito está vacío.");
         
         const phoneNumber = "523221699890";
-        let text = "¡Hola CROMA Project!  Me interesa realizar el siguiente pedido:\n\n";
+        let text = "¡Hola CROMA Project! Me interesa realizar el siguiente pedido:\n\n";
         
         cart.forEach((item, index) => {
             text += `${index + 1}. ${item.name}\n`;
+            if (item.genero) text += `   • Categoría: ${item.genero}\n`;
             text += `   • Talla: ${item.size}\n`;
             text += `   • Color: ${item.color}\n`;
             text += `   • Detalle: ${item.custom}\n`;
@@ -346,41 +480,16 @@ if (cartBtn && modal) cartBtn.onclick = () => modal.style.display = "flex";
 if (closeBtn && modal) closeBtn.onclick = () => modal.style.display = "none";
 if (modal) window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; };
 
-// INICIALIZACIÓN
-document.addEventListener("DOMContentLoaded", () => {
-    updateCartUI();
-    renderHomeProducts();
-    renderFullCatalog();
-    renderProductDetailPage();
-
-    // MANEJO DESPLEGABLE EN PÁGINA DE PREGUNTAS FRECUENTES
+// MANEJO DESPLEGABLE EN PREGUNTAS FRECUENTES (FAQ)
 function initFAQAccordion() {
-    const faqQuestions = document.querySelectorAll('.faq-question');
-    if (faqQuestions.length === 0) return;
-
-    
-}
-
-// INICIALIZACIÓN COMPLETA DE TU MAIN.JS
-document.addEventListener("DOMContentLoaded", () => {
-    updateCartUI();
-    renderHomeProducts();
-    renderFullCatalog();
-    renderProductDetailPage();
-    initFAQAccordion(); // <-- Agregado para ejecutar el comportamiento en preguntas-frecuentes.html
-});
-});
-
-// MANEJO DESPLEGABLE EN PREGUNTAS FRECUENTES
-function initFAQAccordion() {
-    const faqQuestions = document.querySelectorAll('.faq-question');
+    const faqQuestions = document.querySelectorAll('.faq-question, .faq-accordion-btn');
     if (faqQuestions.length === 0) return;
 
     faqQuestions.forEach(button => {
         button.addEventListener('click', () => {
             const faqItem = button.parentElement;
 
-            document.querySelectorAll('.faq-item').forEach(item => {
+            document.querySelectorAll('.faq-item, .faq-accordion-card').forEach(item => {
                 if (item !== faqItem) {
                     item.classList.remove('active');
                 }
@@ -391,11 +500,11 @@ function initFAQAccordion() {
     });
 }
 
-// INICIALIZACIÓN
+// INICIALIZACIÓN COMPLETA DE LA APLICACIÓN
 document.addEventListener("DOMContentLoaded", () => {
     updateCartUI();
     renderHomeProducts();
     renderFullCatalog();
     renderProductDetailPage();
-    initFAQAccordion(); // <-- Se añade esta llamada
+    initFAQAccordion();
 });
