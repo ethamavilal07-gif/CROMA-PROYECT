@@ -105,7 +105,7 @@ const products = [
     },
     {
         id: 6,
-        name: "Playera Tipo Polo Personalizada",
+        name: "Playera De Poliéster Personalizada",
         price: 300,
         image: "assets/img/polo.png",
         description: "Playera ligera, cómoda y resistente, ideal para personalizar con diseños únicos. Su tela de poliéster permite una buena impresión de colores y detalles, además de ser una opción práctica para el uso diario, eventos, equipos o uniformes.",
@@ -214,6 +214,7 @@ const colorMap = {
     }
 };
 
+// 3. DETALLE DE PRODUCTO Y CARRUSEL PERSONALIZADO (producto.html)
 function renderProductDetailPage() {
     const titleEl = document.getElementById('detail-title');
     if (!titleEl) return; 
@@ -237,20 +238,21 @@ function renderProductDetailPage() {
     const priceCard = document.getElementById('detail-price-card');
     if (priceCard) priceCard.innerText = `$${product.price} MXN`;
 
-    // Elementos DOM
+    // Elementos del DOM
     const sizeSelect = document.getElementById('detail-size');
     const colorSelect = document.getElementById('detail-color');
     const grupoGenero = document.getElementById('grupo-corte-genero');
     const elGenero = document.getElementById('corte-genero');
     const grupoTipoPlayera = document.getElementById('grupo-tipo-playera');
+    const elTipoPlayera = document.getElementById('tipo-playera');
 
-    // Determinar tipo de producto actual
-    const esPolo = product.name.toLowerCase().includes("polo");
+    // Identificar productos
+    const esPoliesterPolo = product.id === 6 || product.name.toLowerCase().includes("poliéster") || product.name.toLowerCase().includes("poliester");
     const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || product.name.toLowerCase().includes("basico");
     const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie");
-    const requiereGenero = esPolo || esBasica || esHoodie;
+    const requiereGenero = esPoliesterPolo || esBasica || esHoodie;
 
-    // Configurar opciones del selector "¿Para quién es la prenda?"
+    // 1. Mostrar/Ocultar "¿Para quién es la prenda?"
     if (grupoGenero && elGenero) {
         if (requiereGenero) {
             grupoGenero.style.display = 'block';
@@ -261,7 +263,7 @@ function renderProductDetailPage() {
                     <option value="Unisex">Unisex (Adulto)</option>
                     <option value="Infantil">Infantil (Niño / Niña)</option>
                 `;
-            } else if (esPolo || esBasica) {
+            } else {
                 elGenero.innerHTML = `
                     <option value="">Selecciona una opción</option>
                     <option value="Hombre">Hombre (Caballero)</option>
@@ -273,19 +275,32 @@ function renderProductDetailPage() {
         }
     }
 
-    // Cargar Tallas por defecto
+    // 2. Control EXCLUSIVO de "Selecciona el tipo de playera" para el Producto ID 6
+    if (grupoTipoPlayera) {
+        if (esPoliesterPolo) {
+            grupoTipoPlayera.style.display = 'block';
+        } else {
+            grupoTipoPlayera.style.display = 'none';
+        }
+    }
+
+    // Cargar tallas base
     function loadSizes() {
         if (!sizeSelect) return;
         let sizeList = Array.isArray(product.sizes) ? product.sizes : [product.sizes];
         sizeSelect.innerHTML = sizeList.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-    // Función para actualizar colores y controlar estados Habilitado / Deshabilitado
+    // Función para deshabilitar / habilitar los selectores según "¿Para quién es la prenda?"
     function updateFormState() {
         const selectedGen = elGenero ? elGenero.value : '';
 
         if (requiereGenero && !selectedGen) {
-            // DESHABILITAR Talla y Color si NO se ha seleccionado género
+            // --- ESTADO DESHABILITADO ---
+            if (elTipoPlayera) {
+                elTipoPlayera.disabled = true;
+                elTipoPlayera.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
+            }
             if (sizeSelect) {
                 sizeSelect.disabled = true;
                 sizeSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
@@ -295,21 +310,34 @@ function renderProductDetailPage() {
                 colorSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
             }
         } else {
-            // HABILITAR Talla y Color
+            // --- ESTADO HABILITADO ---
+            
+            // Habilitar Tipo de Playera (si aplica a este producto)
+            if (elTipoPlayera && esPoliesterPolo) {
+                elTipoPlayera.disabled = false;
+                elTipoPlayera.innerHTML = `
+                    <option value="">Selecciona una opción</option>
+                    <option value="Playera Básica">Playera Básica</option>
+                    <option value="Playera Tipo Polo">Playera Tipo Polo</option>
+                `;
+            }
+
+            // Habilitar Talla
             if (sizeSelect) {
                 sizeSelect.disabled = false;
                 loadSizes();
             }
 
+            // Habilitar Color con mapa dinámico
             if (colorSelect) {
                 colorSelect.disabled = false;
                 let availableColors = [];
 
-                if (esPolo && colorMap.polo[selectedGen]) {
+                if (esPoliesterPolo && colorMap.polo && colorMap.polo[selectedGen]) {
                     availableColors = colorMap.polo[selectedGen];
-                } else if (esBasica && colorMap.basica[selectedGen]) {
+                } else if (esBasica && colorMap.basica && colorMap.basica[selectedGen]) {
                     availableColors = colorMap.basica[selectedGen];
-                } else if (esHoodie && colorMap.hoodie[selectedGen]) {
+                } else if (esHoodie && colorMap.hoodie && colorMap.hoodie[selectedGen]) {
                     availableColors = colorMap.hoodie[selectedGen];
                 } else {
                     if (Array.isArray(product.colors)) {
@@ -326,23 +354,14 @@ function renderProductDetailPage() {
         }
     }
 
-    // Aplicar estado inicial (Estarán deshabilitados si requiere selección)
+    // Inicializar estado deshabilitado
     updateFormState();
 
-    // Escuchar el cambio en "¿Para quién es la prenda?"
+    // Escuchar cambios en la selección de género/corte
     if (elGenero) {
         elGenero.onchange = () => {
             updateFormState();
         };
-    }
-
-    // Control de "Selecciona Tipo de Playera" (Solo para Básico)
-    if (grupoTipoPlayera) {
-        if (esBasica) {
-            grupoTipoPlayera.style.display = 'block';
-        } else {
-            grupoTipoPlayera.style.display = 'none';
-        }
     }
 
     // Cargar Carrusel de Trabajos Realizados
@@ -381,6 +400,16 @@ function renderProductDetailPage() {
                 }
             }
 
+            // Validar tipo de playera solo en Playera de Poliéster Personalizada
+            let tipoSeleccionado = '';
+            if (esPoliesterPolo && elTipoPlayera) {
+                tipoSeleccionado = elTipoPlayera.value;
+                if (!tipoSeleccionado) {
+                    showToast("⚠️ Por favor selecciona el tipo de playera.");
+                    return;
+                }
+            }
+
             const selectedSize = sizeSelect ? sizeSelect.value : 'Única';
             const selectedColor = colorSelect ? colorSelect.value : 'Estándar';
 
@@ -392,12 +421,6 @@ function renderProductDetailPage() {
             const customInput = document.getElementById('detail-custom');
             const customText = customInput && customInput.value.trim() ? customInput.value.trim() : "Sin detalle especificado";
 
-            const elTipo = document.getElementById('tipo-playera');
-            let tipoSeleccionado = '';
-            if (elTipo && esBasica) {
-                tipoSeleccionado = elTipo.value;
-            }
-
             const productoParaCarrito = {
                 cartId: Date.now(),
                 name: product.name + (tipoSeleccionado ? ` (${tipoSeleccionado})` : ''),
@@ -405,7 +428,8 @@ function renderProductDetailPage() {
                 size: selectedSize,
                 color: selectedColor,
                 custom: customText,
-                ...(generoSeleccionado && { genero: generoSeleccionado })
+                ...(generoSeleccionado && { genero: generoSeleccionado }),
+                ...(tipoSeleccionado && { tipoPlayera: tipoSeleccionado })
             };
 
             cart.push(productoParaCarrito);
@@ -414,7 +438,6 @@ function renderProductDetailPage() {
         };
     }
 }
-
 // LÓGICA DEL CARRUSEL AUTOMÁTICO EN LOOP INFINITO (MUESTRAS)
 function moveGallerySlide(direction) {
     const track = document.getElementById('gallery-carousel-track');
