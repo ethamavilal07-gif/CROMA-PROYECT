@@ -6,7 +6,7 @@ const products = [
         price: 180,
         image: "assets/img/playera.png",
         description: "Playera cómoda y versátil, perfecta para llevar el diseño que tú quieras. Puedes enviarnos tu imagen, ilustración o idea y nosotros nos encargamos de personalizarla para crear una prenda única y a tu estilo.",
-        sizes: ["CH", "M", "G", "XG", "2XL"],
+        sizes: ["CH", "M", "G", "XG", "2XG"],
         colors: ["Negro", "Blanco", "Azul Marino", "Gris"],
         gallery: [
             "assets/img/playeras/playera1.png",
@@ -109,21 +109,15 @@ const products = [
         price: 300,
         image: "assets/img/polo.png",
         description: "Playera ligera, cómoda y resistente, ideal para personalizar con diseños únicos. Su tela de poliéster permite una buena impresión de colores y detalles, además de ser una opción práctica para el uso diario, eventos, equipos o uniformes.",
-        sizes: ["CH", "M", "G", "XG", "2XL"],
-        colors: ["Negro", "Blanco", "Azul Marino", "Gris"],
+        sizes: ["CH", "M", "G", "XG", "2XG"],
+        colors: ["Negro, Gris, Blanco, Rojo, Marino, Royal"],
         gallery: [
             "assets/img/polo/playera1.png",
             "assets/img/polo/playera2.png",
             "assets/img/polo/playera3.png",
             "assets/img/polo/playera4.png",
-            "assets/img/polo/playera5.png",
-            "assets/img/polo/playera6.png",
-            "assets/img/polo/playera7.png",
-            "assets/img/polo/playera8.png",
-            "assets/img/polo/playera9.png",
-            "assets/img/polo/playera10.png",
-            "assets/img/polo/playera11.png",
-            "assets/img/polo/playera12.png"
+            "assets/img/polo/playera5.png"
+            
         ]
     }
 ];
@@ -197,7 +191,29 @@ function renderFullCatalog() {
     });
 }
 
-// 3. DETALLE DE PRODUCTO Y CARRUSEL PERSONALIZADO (producto.html)
+// MAPA DE COLORES ESPECÍFICOS SEGÚN PRODUCTO Y GÉNERO
+const colorMap = {
+    // Playera Tipo Polo
+    polo: {
+        Caballero: ["Negro", "Gris", "Blanco", "Rojo", "Marino", "Royal"],
+        Dama: ["Negro", "Gris", "Blanco", "Rojo", "Marino", "Royal"],
+        Hombre: ["Negro", "Gris", "Blanco", "Rojo", "Marino", "Royal"],
+        Mujer: ["Negro", "Gris", "Blanco", "Rojo", "Marino", "Royal"]
+    },
+    // Playera Básico
+    basica: {
+        Hombre: ["Negro", "Negro Jaspe", "Gris", "Blanco", "Rojo", "Jade", "Marino", "Royal", "Amarillo Neón"],
+        Caballero: ["Negro", "Negro Jaspe", "Gris", "Blanco", "Rojo", "Jade", "Marino", "Royal", "Amarillo Neón"],
+        Mujer: ["Negro", "Negro Jaspe", "Gris", "Blanco", "Rojo", "Jade", "Marino", "Royal", "Amarillo Neón", "Verde Neón", "Naranja Neón"],
+        Dama: ["Negro", "Negro Jaspe", "Gris", "Blanco", "Rojo", "Jade", "Marino", "Royal", "Amarillo Neón", "Verde Neón", "Naranja Neón"]
+    },
+    // Hoodie
+    hoodie: {
+        Unisex: ["Negro", "Negro Jaspe", "Gris Jaspe", "Blanco", "Arena", "Marrón", "Rojo", "Verde Bosque", "Marino", "Royal", "Rosa Pastel", "Lavanda"],
+        Infantil: ["Negro", "Negro Jaspe", "Gris Jaspe", "Blanco", "Rojo", "Marino", "Royal"]
+    }
+};
+
 function renderProductDetailPage() {
     const titleEl = document.getElementById('detail-title');
     if (!titleEl) return; 
@@ -221,29 +237,111 @@ function renderProductDetailPage() {
     const priceCard = document.getElementById('detail-price-card');
     if (priceCard) priceCard.innerText = `$${product.price} MXN`;
 
-    // Cargar Tallas y Colores
+    // Elementos DOM
     const sizeSelect = document.getElementById('detail-size');
-    if (sizeSelect) {
-        sizeSelect.innerHTML = product.sizes.map(s => `<option value="${s}">${s}</option>`).join('');
-    }
-
     const colorSelect = document.getElementById('detail-color');
-    if (colorSelect) {
-        colorSelect.innerHTML = product.colors.map(c => `<option value="${c}">${c}</option>`).join('');
-    }
-
-    // --- EVALUAR SI REQUIERE SELECTOR DE GÉNERO ("¿Para quién es la prenda?") ---
-    const esPrendaConGenero = product.id === 1 || product.id === 2 || product.name.toLowerCase().includes("polo");
-
-    // --- CONTROL STRICTO DE VISIBILIDAD DE CAMPOS ESPECIALES ---
     const grupoGenero = document.getElementById('grupo-corte-genero');
+    const elGenero = document.getElementById('corte-genero');
+    const grupoTipoPlayera = document.getElementById('grupo-tipo-playera');
 
-    // 1. "¿Para quién es la prenda?": Playera Básica (ID 1), Hoodie (ID 2) o cualquier Polo
-    if (grupoGenero) {
-        if (esPrendaConGenero) {
+    // Determinar tipo de producto actual
+    const esPolo = product.name.toLowerCase().includes("polo");
+    const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || product.name.toLowerCase().includes("basico");
+    const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie");
+    const requiereGenero = esPolo || esBasica || esHoodie;
+
+    // Configurar opciones del selector "¿Para quién es la prenda?"
+    if (grupoGenero && elGenero) {
+        if (requiereGenero) {
             grupoGenero.style.display = 'block';
+
+            if (esHoodie) {
+                elGenero.innerHTML = `
+                    <option value="">Selecciona una opción</option>
+                    <option value="Unisex">Unisex (Adulto)</option>
+                    <option value="Infantil">Infantil (Niño / Niña)</option>
+                `;
+            } else if (esPolo || esBasica) {
+                elGenero.innerHTML = `
+                    <option value="">Selecciona una opción</option>
+                    <option value="Hombre">Hombre (Caballero)</option>
+                    <option value="Mujer">Mujer (Dama)</option>
+                `;
+            }
         } else {
             grupoGenero.style.display = 'none';
+        }
+    }
+
+    // Cargar Tallas por defecto
+    function loadSizes() {
+        if (!sizeSelect) return;
+        let sizeList = Array.isArray(product.sizes) ? product.sizes : [product.sizes];
+        sizeSelect.innerHTML = sizeList.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    // Función para actualizar colores y controlar estados Habilitado / Deshabilitado
+    function updateFormState() {
+        const selectedGen = elGenero ? elGenero.value : '';
+
+        if (requiereGenero && !selectedGen) {
+            // DESHABILITAR Talla y Color si NO se ha seleccionado género
+            if (sizeSelect) {
+                sizeSelect.disabled = true;
+                sizeSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
+            }
+            if (colorSelect) {
+                colorSelect.disabled = true;
+                colorSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
+            }
+        } else {
+            // HABILITAR Talla y Color
+            if (sizeSelect) {
+                sizeSelect.disabled = false;
+                loadSizes();
+            }
+
+            if (colorSelect) {
+                colorSelect.disabled = false;
+                let availableColors = [];
+
+                if (esPolo && colorMap.polo[selectedGen]) {
+                    availableColors = colorMap.polo[selectedGen];
+                } else if (esBasica && colorMap.basica[selectedGen]) {
+                    availableColors = colorMap.basica[selectedGen];
+                } else if (esHoodie && colorMap.hoodie[selectedGen]) {
+                    availableColors = colorMap.hoodie[selectedGen];
+                } else {
+                    if (Array.isArray(product.colors)) {
+                        availableColors = product.colors;
+                    } else if (typeof product.colors === 'string') {
+                        availableColors = product.colors.split(',').map(c => c.trim());
+                    } else {
+                        availableColors = ["Estándar"];
+                    }
+                }
+
+                colorSelect.innerHTML = availableColors.map(c => `<option value="${c}">${c}</option>`).join('');
+            }
+        }
+    }
+
+    // Aplicar estado inicial (Estarán deshabilitados si requiere selección)
+    updateFormState();
+
+    // Escuchar el cambio en "¿Para quién es la prenda?"
+    if (elGenero) {
+        elGenero.onchange = () => {
+            updateFormState();
+        };
+    }
+
+    // Control de "Selecciona Tipo de Playera" (Solo para Básico)
+    if (grupoTipoPlayera) {
+        if (esBasica) {
+            grupoTipoPlayera.style.display = 'block';
+        } else {
+            grupoTipoPlayera.style.display = 'none';
         }
     }
 
@@ -273,16 +371,9 @@ function renderProductDetailPage() {
     const addBtn = document.getElementById('add-to-cart-detail-btn');
     if (addBtn) {
         addBtn.onclick = () => {
-            const selectedSize = sizeSelect ? sizeSelect.value : 'Única';
-            const selectedColor = colorSelect ? colorSelect.value : 'Estándar';
-            const customInput = document.getElementById('detail-custom');
-            const customText = customInput && customInput.value.trim() ? customInput.value.trim() : "Sin detalle especificado";
-
-            // Capturar la opción de género solo si aplica (Playera, Hoodie o Polo)
-            const elGenero = document.getElementById('corte-genero');
             let generoSeleccionado = '';
 
-            if (elGenero && esPrendaConGenero) {
+            if (elGenero && requiereGenero) {
                 generoSeleccionado = elGenero.value;
                 if (!generoSeleccionado) {
                     showToast("⚠️ Por favor selecciona para quién es la prenda.");
@@ -290,10 +381,20 @@ function renderProductDetailPage() {
                 }
             }
 
-            // Capturar la opción de Tipo de Playera solo si aplica (Playera Básico)
+            const selectedSize = sizeSelect ? sizeSelect.value : 'Única';
+            const selectedColor = colorSelect ? colorSelect.value : 'Estándar';
+
+            if (!selectedSize || !selectedColor) {
+                showToast("⚠️ Por favor selecciona la talla y el color.");
+                return;
+            }
+
+            const customInput = document.getElementById('detail-custom');
+            const customText = customInput && customInput.value.trim() ? customInput.value.trim() : "Sin detalle especificado";
+
             const elTipo = document.getElementById('tipo-playera');
             let tipoSeleccionado = '';
-            if (elTipo && product.id === 1) {
+            if (elTipo && esBasica) {
                 tipoSeleccionado = elTipo.value;
             }
 
