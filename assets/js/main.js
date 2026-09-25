@@ -116,7 +116,12 @@ const products = [
             "assets/img/polo/playera2.png",
             "assets/img/polo/playera3.png",
             "assets/img/polo/playera4.png",
-            "assets/img/polo/playera5.png"
+            "assets/img/polo/playera5.png",
+            "assets/img/polo/playera6.png",
+            "assets/img/polo/playera7.png",
+            "assets/img/polo/playera8.png",
+            "assets/img/polo/playera9.png"
+
             
         ]
     }
@@ -227,16 +232,23 @@ function renderProductDetailPage() {
     currentGalleryPosition = 0;
     stopGalleryAutoScroll();
 
-    // Cargar información del producto
+    // Cargar información inicial del producto
     document.getElementById('detail-img').src = product.image;
     document.getElementById('detail-img').alt = product.name;
     titleEl.innerText = product.name;
     
+    // Variables para manipular precios en pantalla
+    let currentPrice = product.price;
     const priceMobile = document.getElementById('detail-price-mobile');
-    if (priceMobile) priceMobile.innerText = `$${product.price} MXN`;
-    
     const priceCard = document.getElementById('detail-price-card');
-    if (priceCard) priceCard.innerText = `$${product.price} MXN`;
+
+    function updatePriceDisplay(newPrice) {
+        currentPrice = newPrice;
+        if (priceMobile) priceMobile.innerText = `$${newPrice} MXN`;
+        if (priceCard) priceCard.innerText = `$${newPrice} MXN`;
+    }
+
+    updatePriceDisplay(product.price);
 
     // Elementos del DOM
     const sizeSelect = document.getElementById('detail-size');
@@ -309,10 +321,12 @@ function renderProductDetailPage() {
                 colorSelect.disabled = true;
                 colorSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
             }
+            // Restaurar precio base si deselecciona
+            updatePriceDisplay(product.price);
         } else {
             // --- ESTADO HABILITADO ---
             
-            // Habilitar Tipo de Playera (si aplica a este producto)
+            // Habilitar Tipo de Playera
             if (elTipoPlayera && esPoliesterPolo) {
                 elTipoPlayera.disabled = false;
                 elTipoPlayera.innerHTML = `
@@ -364,6 +378,20 @@ function renderProductDetailPage() {
         };
     }
 
+    // --- CAMBIO DINÁMICO DE PRECIO AL ELEGIR TIPO DE PLAYERA ---
+    if (elTipoPlayera && esPoliesterPolo) {
+        elTipoPlayera.onchange = () => {
+            const val = elTipoPlayera.value;
+            if (val === "Playera Básica") {
+                updatePriceDisplay(200);
+            } else if (val === "Playera Tipo Polo" || val === "Tipo Polo") {
+                updatePriceDisplay(300);
+            } else {
+                updatePriceDisplay(product.price); // Precio por defecto
+            }
+        };
+    }
+
     // Cargar Carrusel de Trabajos Realizados
     const track = document.getElementById('gallery-carousel-track');
     if (track && product.gallery) {
@@ -400,7 +428,7 @@ function renderProductDetailPage() {
                 }
             }
 
-            // Validar tipo de playera solo en Playera de Poliéster Personalizada
+            // Validar tipo de playera
             let tipoSeleccionado = '';
             if (esPoliesterPolo && elTipoPlayera) {
                 tipoSeleccionado = elTipoPlayera.value;
@@ -424,7 +452,7 @@ function renderProductDetailPage() {
             const productoParaCarrito = {
                 cartId: Date.now(),
                 name: product.name + (tipoSeleccionado ? ` (${tipoSeleccionado})` : ''),
-                price: product.price,
+                price: currentPrice, // 👈 Guarda el precio dinámico ($200 o $300)
                 size: selectedSize,
                 color: selectedColor,
                 custom: customText,
@@ -438,6 +466,7 @@ function renderProductDetailPage() {
         };
     }
 }
+
 // LÓGICA DEL CARRUSEL AUTOMÁTICO EN LOOP INFINITO (MUESTRAS)
 function moveGallerySlide(direction) {
     const track = document.getElementById('gallery-carousel-track');
