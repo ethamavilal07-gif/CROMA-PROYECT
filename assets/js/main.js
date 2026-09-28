@@ -49,7 +49,7 @@ const products = [
     {
         id: 3,
         name: "Taza Personalizada",
-        price: 100,
+        price: 80,
         image: "assets/img/taza.png",
         description: "Taza ideal para darle un toque único a tus momentos favoritos. Elige el diseño que a ti te guste, envíanos tu imagen, ilustración, frase o idea y nosotros la plasmamos en tu taza.",
         sizes: ["Única (11 oz)"],
