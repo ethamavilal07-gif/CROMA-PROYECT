@@ -1,5 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
+<style>
+@media (max-width: 768px) {
+    /* 1. Forzar que el contenedor del banner no cree espacio vacío */
+    .hero, .banner, .slider, .carousel, .swiper, [class*="carousel"], [class*="slider"] {
+        height: auto !important;
+        min-height: unset !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* 2. Ajustar la imagen del banner para que no deje margen */
+    .hero img, .banner img, .slider img, .carousel img, [class*="carousel"] img {
+        height: auto !important;
+        max-height: 220px !important;
+        object-fit: contain !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    /* 3. Reducir y ocultar o reposicionar las flechas en móvil para ganar espacio */
+    .prev, .next, .swiper-button-prev, .swiper-button-next, [class*="arrow"], [class*="btn-prev"], [class*="btn-next"] {
+        width: 30px !important;
+        height: 30px !important;
+        margin: 5px !important;
+        padding: 0 !important;
+    }
+
+    /* 4. Compactar la tipografía y espacio del título inferior */
+    body h1, body h2, body .title {
+        font-size: 1.3rem !important;
+        margin-top: 10px !important;
+        margin-bottom: 5px !important;
+        padding: 0 10px !important;
+    }
+}
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
