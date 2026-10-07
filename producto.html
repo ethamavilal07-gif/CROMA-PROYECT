@@ -92,18 +92,18 @@
 
                 <div class="form-group" style="margin-bottom: 18px;">
                     <label style="font-weight: 600; display: block; margin-bottom: 6px;">Selecciona Tu Talla:</label>
-                    <select id="detail-size" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Poppins', sans-serif;"></select>
+                    <select id="detail-size" class="customizer-control"></select>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 18px;">
                     <label style="font-weight: 600; display: block; margin-bottom: 6px;">Selecciona El Color:</label>
-                    <select id="detail-color" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Poppins', sans-serif;"></select>
+                    <select id="detail-color" class="customizer-control"></select>
                 </div>
                 
 
                 <div class="form-group" style="margin-bottom: 18px;">
                     <label style="font-weight: 600; display: block; margin-bottom: 6px;">Detalle / Frase de tu diseño:</label>
-                    <textarea id="detail-custom" rows="4" placeholder="Escribe aquí tu frase, idea, nombre o especificaciones de la imagen a sublimar..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Poppins', sans-serif; resize: vertical; box-sizing: border-box;"></textarea>
+                    <textarea id="detail-custom" class="customizer-control" rows="4" placeholder="Escribe aquí tu frase, idea, nombre o especificaciones de la imagen a sublimar..."></textarea>
                 </div>
             </div>
 
@@ -113,8 +113,9 @@
                 <h2 id="detail-price-card" style="color: #6b1d2f; margin-bottom: 15px; font-size: 2rem;">$0 MXN</h2>
                 <p style="color: #27ae60; font-weight: 600; font-size: 0.85rem; margin-bottom: 20px;">✓ Stock disponible para sublimación</p>
                 
-                <button id="add-to-cart-detail-btn" class="btn-add" style="width: 100%; padding: 12px; font-size: 1rem; cursor: pointer;">
-                    🛒 Agregar al carrito
+                <button id="add-to-cart-detail-btn" class="btn-add btn-add-to-cart" type="button">
+                    <span class="text">🛒 Agregar al carrito</span>
+                    <span class="animation-circle" aria-hidden="true"></span>
                 </button>
             </div>
 

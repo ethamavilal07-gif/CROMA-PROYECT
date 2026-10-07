@@ -315,6 +315,56 @@ h1, h2, h3 {
     font-size: 0.85rem;
 }
 
+/* Controles de personalización: realce en el vino de la marca. */
+.product-detail-layout .form-group select,
+.product-detail-layout .form-group input,
+.product-detail-layout .customizer-control {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d8c9c8;
+    border-radius: 8px;
+    background-color: #faf8f5;
+    color: var(--text-color);
+    font: inherit;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(74, 19, 32, 0.06);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.product-detail-layout .customizer-control {
+    min-height: 44px;
+}
+
+.product-detail-layout textarea.customizer-control {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.product-detail-layout .form-group select:not(:disabled):hover,
+.product-detail-layout .form-group input:hover,
+.product-detail-layout .customizer-control:hover {
+    border-color: var(--primary-color);
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(107, 29, 47, 0.14);
+}
+
+.product-detail-layout .form-group select:not(:disabled):focus,
+.product-detail-layout .form-group input:focus,
+.product-detail-layout .customizer-control:focus {
+    transform: translateY(-3px);
+    border-color: var(--primary-color);
+    background-color: #fff;
+    outline: 2px solid rgba(107, 29, 47, 0.18);
+    outline-offset: 2px;
+    box-shadow: 0 8px 18px rgba(107, 29, 47, 0.16);
+}
+
+.product-detail-layout .form-group select:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
 .btn-add {
     background-color: var(--primary-color);
     color: #FFFFFF;
@@ -330,6 +380,60 @@ h1, h2, h3 {
 
 .btn-add:hover {
     background-color: var(--accent-color);
+}
+
+.btn-add-to-cart {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 50px;
+    padding: 12px 24px;
+    overflow: hidden;
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    font-size: 1rem;
+    text-align: center;
+    border-radius: 100px;
+    box-shadow: 0 0 0 2px rgba(107, 29, 47, 0.12);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-add-to-cart:hover {
+    background-color: var(--primary-color);
+    box-shadow: 0 0 0 5px rgba(107, 29, 47, 0.38);
+}
+
+.btn-add-to-cart .text {
+    position: relative;
+    z-index: 1;
+}
+
+.btn-add-to-cart .animation-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-add-to-cart:hover .animation-circle {
+    width: 200%;
+    height: 200%;
+    opacity: 1;
+}
+
+.btn-add-to-cart:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+.btn-add-to-cart:active {
+    transform: scale(0.95);
 }
 
 /* SECCIÓN DE BOTONES INFORMATIVOS (FINAL DE PÁGINA) */
@@ -354,9 +458,11 @@ h1, h2, h3 {
     flex: 1;
     min-width: 250px;
     max-width: 380px;
-    background-color: #F8F8F8;
-    border: 1px solid #EAEAEA;
-    border-radius: 10px;
+    background:
+        linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+        linear-gradient(to bottom right, var(--primary-color) 0%, rgba(107, 29, 47, 0) 60%) border-box;
+    border: 2px solid transparent;
+    border-radius: 15px;
     padding: 16px 20px;
     display: flex;
     align-items: center;
@@ -372,11 +478,32 @@ h1, h2, h3 {
 }
 
 .info-btn:hover {
-    background-color: #FFFFFF;
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background:
+        linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+        linear-gradient(to bottom right, var(--primary-color) 0%, rgba(107, 29, 47, 0) 60%) border-box;
     transform: translateY(-2px);
     color: var(--primary-color);
+}
+
+.info-btn:hover,
+.info-btn:focus-visible {
+    animation: info-btn-outline-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes info-btn-outline-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(107, 29, 47, 0.16);
+    }
+    50% {
+        box-shadow: 0 0 0 5px rgba(107, 29, 47, 0.32);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .info-btn:hover,
+    .info-btn:focus-visible {
+        animation: none;
+    }
 }
 
 .info-btn .btn-icon {
