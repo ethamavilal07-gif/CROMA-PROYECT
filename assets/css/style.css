@@ -677,11 +677,7 @@ h1, h2, h3 {
 /* ===================================================
    ADAPTACIÓN RESPONSIVA PARA CELULARES (MOBILE)
    =================================================== */
-@media (max-width: 768px) {
-    /* Evitar que cualquier elemento cause scroll horizontal en el celular */
-    html, body {
-    padding-top: 130px; /* Compensa la altura del header en escritorio */
-}
+
 
 /* Ajuste de espacio superior para dispositivos móviles */
 
