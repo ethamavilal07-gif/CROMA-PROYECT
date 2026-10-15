@@ -1,53 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
-<style>
-@media (max-width: 768px) {
-    /* 1. Forzar que el contenedor del banner no cree espacio vacío */
-    .hero, .banner, .slider, .carousel, .swiper, [class*="carousel"], [class*="slider"] {
-        height: auto !important;
-        min-height: unset !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        margin-top: 10px !important;
-        margin-bottom: 10px !important;
-    }
-
-    /* 2. Ajustar la imagen del banner para que no deje margen */
-    .hero img, .banner img, .slider img, .carousel img, [class*="carousel"] img {
-        height: auto !important;
-        max-height: 220px !important;
-        object-fit: contain !important;
-        margin: 0 auto !important;
-        display: block !important;
-    }
-
-    /* 3. Reducir y ocultar o reposicionar las flechas en móvil para ganar espacio */
-    .prev, .next, .swiper-button-prev, .swiper-button-next, [class*="arrow"], [class*="btn-prev"], [class*="btn-next"] {
-        width: 30px !important;
-        height: 30px !important;
-        margin: 5px !important;
-        padding: 0 !important;
-    }
-
-    /* 4. Compactar la tipografía y espacio del título inferior */
-    body h1, body h2, body .title {
-        font-size: 1.3rem !important;
-        margin-top: 10px !important;
-        margin-bottom: 5px !important;
-        padding: 0 10px !important;
-    }
-}
-</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CROMA Project | Sublimados Personalizados</title>
+    <title>CROMA Project | Sublimados Personalizados 🎃</title>
     <!-- Fuentes Google: Playfair Display, Poppins y Caveat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Estilos CSS -->
+    <!-- Estilos Base y Especial Halloween -->
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/halloween.css">
+    <style>
+    @media (max-width: 768px) {
+        /* 1. Forzar que el contenedor del banner no cree espacio vacío */
+        .hero, .banner, .slider, .carousel, .swiper, [class*="carousel"], [class*="slider"] {
+            height: auto !important;
+            min-height: unset !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: 10px !important;
+            margin-bottom: 10px !important;
+        }
+
+        /* 2. Ajustar la imagen del banner para que no deje margen */
+        .hero img, .banner img, .slider img, .carousel img, [class*="carousel"] img {
+            height: auto !important;
+            max-height: 220px !important;
+            object-fit: contain !important;
+            margin: 0 auto !important;
+            display: block !important;
+        }
+
+        /* 3. Reducir y ocultar o reposicionar las flechas en móvil para ganar espacio */
+        .prev, .next, .swiper-button-prev, .swiper-button-next, [class*="arrow"], [class*="btn-prev"], [class*="btn-next"] {
+            width: 30px !important;
+            height: 30px !important;
+            margin: 5px !important;
+            padding: 0 !important;
+        }
+
+        /* 4. Compactar la tipografía y espacio del título inferior */
+        body h1, body h2, body .title {
+            font-size: 1.3rem !important;
+            margin-top: 10px !important;
+            margin-bottom: 5px !important;
+            padding: 0 10px !important;
+        }
+    }
+    </style>
 </head>
 <body>
 
@@ -187,5 +188,6 @@
 
     <!-- JS de la aplicación -->
     <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/halloween.js" defer></script>
 </body>
 </html>

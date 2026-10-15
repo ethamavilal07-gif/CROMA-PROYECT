@@ -1,0 +1,403 @@
+/* ==========================================================================
+   CROMA PROJECT - TEMA HALLOWEEN INTERMEDIO MÍSTICO ("Gothic Wine Halloween")
+   Conserva 100% los colores principales (Vino Tinto #6B1D2F y Crema #F8F5F0)
+   incorporando acentos calabaza, niebla mística y detalles góticos elegantes.
+   ========================================================================== */
+
+:root {
+    --spooky-orange: #FF7518;
+    --spooky-orange-soft: rgba(255, 117, 24, 0.15);
+    --spooky-amber: #FFA726;
+    --spooky-glow: 0 0 18px rgba(255, 117, 24, 0.45);
+    --spooky-wine-glow: 0 0 18px rgba(107, 29, 47, 0.5);
+    --spooky-dark: #240a15;
+}
+/* --------------------------------------------------------------------------
+   1. TELARAÑAS VECTORIALES DE ESQUINA (POINTER-EVENTS: NONE)
+   -------------------------------------------------------------------------- */
+.spooky-web-top-left,
+.spooky-web-top-right {
+    position: fixed;
+    top: 0;
+    width: 140px;
+    height: 140px;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0.75;
+    transition: opacity 0.3s ease;
+}
+
+.spooky-web-top-left {
+    left: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%236B1D2F' stroke-width='1.2' stroke-opacity='0.4'%3E%3Cpath d='M0 0 L100 0 M0 0 L0 100 M0 0 L100 100 M0 0 L40 100 M0 0 L100 40 M0 0 L20 100 M0 0 L100 20'/%3E%3Cpath d='M0 30 Q 15 25, 30 0'/%3E%3Cpath d='M0 55 Q 30 45, 55 0'/%3E%3Cpath d='M0 80 Q 45 70, 80 0'/%3E%3Cpath d='M0 100 Q 60 88, 100 0'/%3E%3C/svg%3E") no-repeat top left;
+    background-size: contain;
+}
+
+.spooky-web-top-right {
+    right: 0;
+    transform: scaleX(-1);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%236B1D2F' stroke-width='1.2' stroke-opacity='0.4'%3E%3Cpath d='M0 0 L100 0 M0 0 L0 100 M0 0 L100 100 M0 0 L40 100 M0 0 L100 40 M0 0 L20 100 M0 0 L100 20'/%3E%3Cpath d='M0 30 Q 15 25, 30 0'/%3E%3Cpath d='M0 55 Q 30 45, 55 0'/%3E%3Cpath d='M0 80 Q 45 70, 80 0'/%3E%3Cpath d='M0 100 Q 60 88, 100 0'/%3E%3C/svg%3E") no-repeat top left;
+    background-size: contain;
+}
+
+/* --------------------------------------------------------------------------
+   2. ENCABEZADO Y LOGO
+   -------------------------------------------------------------------------- */
+.main-header {
+    border-bottom: 2px solid rgba(107, 29, 47, 0.12);
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(8px);
+}
+
+.logo {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Pequeño sombrero o calabacita mística flotando sobre el logo */
+.logo::after {
+    content: "🎃";
+    position: absolute;
+    top: -8px;
+    right: -14px;
+    font-size: 1.15rem;
+    filter: drop-shadow(0 2px 4px rgba(255, 117, 24, 0.5));
+    animation: spooky-pumpkin-hover 3s ease-in-out infinite alternate;
+}
+
+@keyframes spooky-pumpkin-hover {
+    0% { transform: translateY(0) rotate(-6deg); }
+    100% { transform: translateY(-4px) rotate(8deg); }
+}
+
+/* --------------------------------------------------------------------------
+   3. BOTÓN DE CARRITO TEMÁTICO
+   -------------------------------------------------------------------------- */
+.btn-cart {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8A253C 100%) !important;
+    box-shadow: 0 3px 12px rgba(107, 29, 47, 0.35);
+    position: relative;
+    overflow: visible;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn-cart:hover {
+    box-shadow: var(--spooky-glow), 0 4px 15px rgba(107, 29, 47, 0.45) !important;
+    transform: translateY(-2px) scale(1.03);
+}
+
+/* --------------------------------------------------------------------------
+   4. BUSCADOR CON RESPLANDOR DE VELA
+   -------------------------------------------------------------------------- */
+.ae-search-box {
+    border-bottom: 1.5px solid rgba(107, 29, 47, 0.4) !important;
+    transition: all 0.3s ease;
+}
+
+.ae-search-box:focus-within {
+    border-bottom-color: var(--spooky-orange) !important;
+    box-shadow: 0 4px 10px rgba(255, 117, 24, 0.25);
+}
+
+.ae-search-box .search-icon {
+    transition: transform 0.3s ease;
+}
+
+.ae-search-box:focus-within .search-icon {
+    transform: rotate(20deg) scale(1.15);
+}
+
+/* --------------------------------------------------------------------------
+   5. CARRUSEL CON NIEBLA SUAVE Y FLECHAS CALABAZA
+   -------------------------------------------------------------------------- */
+.banner-carousel {
+    position: relative;
+    background: radial-gradient(circle at center, #FAF6F5 0%, #F3ECE8 100%) !important;
+}
+
+.carousel-arrow {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: var(--primary-color) !important;
+    box-shadow: 0 4px 12px rgba(107, 29, 47, 0.2) !important;
+    border: 1px solid rgba(255, 117, 24, 0.2) !important;
+}
+
+.carousel-arrow:hover {
+    background: var(--primary-color) !important;
+    color: #FFF !important;
+    box-shadow: 0 0 16px rgba(255, 117, 24, 0.6) !important;
+    border-color: var(--spooky-orange) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. BANNER DE FRASE "Y SI ALGUIEN DICE..." - VERSIÓN HALLOWEEN
+   -------------------------------------------------------------------------- */
+.quote-banner {
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-serif {
+    position: relative;
+    z-index: 2;
+}
+
+.highlight-pink {
+    background: linear-gradient(135deg, #7A1F35 0%, #B83A4B 50%, #FF7518 100%) !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 117, 24, 0.3);
+    border-radius: 25px;
+    padding: 4px 22px !important;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.highlight-pink:hover {
+    transform: scale(1.04) rotate(-1deg);
+    box-shadow: var(--spooky-glow);
+}
+
+.quote-handwriting {
+    text-shadow: 2px 2px 8px rgba(107, 29, 47, 0.2);
+    position: relative;
+}
+
+.quote-handwriting::after {
+    content: " 🦇";
+    font-size: 2.2rem;
+    vertical-align: middle;
+    animation: bat-wiggle 2.5s ease-in-out infinite alternate;
+    display: inline-block;
+}
+
+@keyframes bat-wiggle {
+    0% { transform: translateY(0) rotate(-5deg); }
+    100% { transform: translateY(-6px) rotate(10deg); }
+}
+
+.underline-brush {
+    background: linear-gradient(90deg, #E85D75 0%, var(--spooky-orange) 100%) !important;
+    box-shadow: 0 2px 8px rgba(255, 117, 24, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   7. SECCIÓN DE PRODUCTOS & TARJETAS SPOOKY
+   -------------------------------------------------------------------------- */
+.catalog h2 {
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.catalog h2::before {
+    content: "🕯️ ";
+    font-size: 1.6rem;
+    vertical-align: middle;
+}
+
+.catalog h2::after {
+    content: " 🕸️";
+    font-size: 1.6rem;
+    vertical-align: middle;
+}
+
+.product-card {
+    position: relative;
+    border: 1px solid rgba(107, 29, 47, 0.08);
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    overflow: hidden;
+}
+
+.product-card::before {
+    content: "🎃 Spooky Pick";
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--spooky-orange) 100%);
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(255, 117, 24, 0.35);
+    z-index: 5;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(107, 29, 47, 0.16), 0 0 16px rgba(255, 117, 24, 0.2) !important;
+    border-color: rgba(255, 117, 24, 0.4);
+}
+
+.product-card:hover::before {
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(255, 117, 24, 0.6);
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.03);
+    transition: transform 0.4s ease;
+}
+
+/* Botón Personalizar con fuego de calabaza */
+.btn-add {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8A253C 100%) !important;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease !important;
+}
+
+.btn-add:hover {
+    background: linear-gradient(135deg, #8A253C 0%, var(--spooky-orange) 100%) !important;
+    box-shadow: 0 4px 15px rgba(255, 117, 24, 0.4) !important;
+    transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   8. BOTONES INFORMATIVOS (WHATSAPP, PREGUNTAS, CATÁLOGO)
+   -------------------------------------------------------------------------- */
+.info-btn {
+    border: 2px solid rgba(107, 29, 47, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(107, 29, 47, 0.05) !important;
+}
+
+.info-btn:hover {
+    border-color: var(--spooky-orange) !important;
+    box-shadow: 0 6px 20px rgba(255, 117, 24, 0.25) !important;
+    transform: translateY(-3px) scale(1.01);
+}
+
+/* --------------------------------------------------------------------------
+   9. NOTIFICACIÓN TOAST CON RESPLANDOR
+   -------------------------------------------------------------------------- */
+.toast {
+    background: linear-gradient(135deg, #4A1320 0%, #6B1D2F 70%, var(--spooky-orange) 100%) !important;
+    border: 1px solid rgba(255, 117, 24, 0.5) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), var(--spooky-glow) !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. MODAL DEL CARRITO CON DETALLES DE TEMPORADA
+   -------------------------------------------------------------------------- */
+.modal-content {
+    border: 2px solid rgba(107, 29, 47, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(107, 29, 47, 0.15);
+}
+
+.modal-content h2::before {
+    content: "🎃 ";
+}
+
+/* --------------------------------------------------------------------------
+   11. MURCIÉLAGOS FLOTANTES DE FONDO (CANVAS / PARTICULAS)
+   -------------------------------------------------------------------------- */
+#spooky-particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   12. BOTÓN INTERACTIVO FLOTANTE: "MODO SPOOKY" (TOGGLE)
+   -------------------------------------------------------------------------- */
+.spooky-toggle-btn {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    z-index: 999;
+    background: linear-gradient(135deg, #4A1320 0%, #6B1D2F 100%);
+    color: #FFFFFF;
+    border: 2px solid var(--spooky-orange);
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25), 0 0 12px rgba(255, 117, 24, 0.35);
+    transition: all 0.3s ease;
+}
+
+.spooky-toggle-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.3), var(--spooky-glow);
+}
+
+.spooky-toggle-btn .toggle-icon {
+    font-size: 1.1rem;
+    animation: spooky-pumpkin-hover 2.5s ease-in-out infinite alternate;
+}
+
+/* Estilo cuando el usuario desactiva el modo */
+body.spooky-off .spooky-web-top-left,
+body.spooky-off .spooky-web-top-right,
+body.spooky-off #spooky-particles-canvas,
+body.spooky-off .product-card::before,
+body.spooky-off .logo::after {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. DETALLES DE HALLOWEEN EN PÁGINA DE PRODUCTO Y PERSONALIZADOR
+   -------------------------------------------------------------------------- */
+.product-detail-layout .form-group select:not(:disabled):focus,
+.product-detail-layout .form-group input:focus,
+.product-detail-layout .customizer-control:focus {
+    border-color: var(--spooky-orange) !important;
+    outline: 2px solid rgba(255, 117, 24, 0.3) !important;
+    box-shadow: 0 0 14px rgba(255, 117, 24, 0.25) !important;
+}
+
+.btn-add-to-cart {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8A253C 100%) !important;
+    box-shadow: 0 0 0 2px rgba(107, 29, 47, 0.12), 0 4px 15px rgba(107, 29, 47, 0.25) !important;
+}
+
+.btn-add-to-cart:hover {
+    box-shadow: 0 0 0 4px rgba(255, 117, 24, 0.35), var(--spooky-glow) !important;
+    transform: translateY(-2px);
+}
+
+#prev-gallery-btn,
+#next-gallery-btn {
+    background: var(--primary-color) !important;
+    box-shadow: 0 2px 8px rgba(107, 29, 47, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+#prev-gallery-btn:hover,
+#next-gallery-btn:hover {
+    background: var(--spooky-orange) !important;
+    box-shadow: 0 0 12px rgba(255, 117, 24, 0.6) !important;
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .spooky-web-top-left,
+    .spooky-web-top-right {
+        width: 80px;
+        height: 80px;
+    }
+    .spooky-toggle-btn {
+        bottom: 15px;
+        left: 15px;
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+}
