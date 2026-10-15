@@ -147,5 +147,46 @@
 
     <script src="./assets/js/main.js"></script>
     <script src="./assets/js/halloween.js" defer></script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Buscamos todos los selectores y la imagen principal del producto
+    const selects = document.querySelectorAll('select');
+    // Ajusta este selector si tu imagen principal tiene un id (ej. '#imagen-producto')
+    const imagenProducto = document.querySelector('main img, .producto-imagen img, .card img, img[alt*="Playera"]');
+
+    if (!imagenProducto) return;
+
+    // Guardamos la imagen original (la tipo polo) para restaurarla si cambian de opción
+    let imagenOriginal = imagenProducto.src;
+
+    selects.forEach(select => {
+        // Detectamos cuál es el select que tiene la opción "Playera Básica"
+        const tienePlayeraBasica = Array.from(select.options).some(opt => 
+            opt.text.toLowerCase().includes('básica') || opt.text.toLowerCase().includes('basica')
+        );
+
+        if (tienePlayeraBasica) {
+            const actualizarImagen = () => {
+                const opcionElegida = select.options[select.selectedIndex].text.toLowerCase();
+
+                if (opcionElegida.includes('básica') || opcionElegida.includes('basica')) {
+                    // 👉 CAMBIA ESTA RUTA por la ruta real de tu foto de playera básica:
+                    imagenProducto.src = 'assets/img/playera-basica-poliester.png';
+                } else {
+                    // Regresa a la foto original (ej. Tipo Polo)
+                    imagenProducto.src = imagenOriginal;
+                }
+            };
+
+            // Escuchar cada vez que el usuario cambie la opción
+            select.addEventListener('change', actualizarImagen);
+
+            // Ejecutar una vez al cargar por si "Playera Básica" ya viene seleccionada por defecto
+            actualizarImagen();
+        }
+    });
+});
+</script>
 </body>
 </html>
