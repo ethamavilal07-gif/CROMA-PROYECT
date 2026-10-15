@@ -401,3 +401,63 @@ body.spooky-off .logo::after {
         font-size: 0.75rem;
     }
 }
+
+/* =========================================================
+   CORRECCIONES RESPONSIVAS PARA CELULAR (MODO HALLOWEEN)
+   ========================================================= */
+
+/* 1. Fijar las telarañas y el canvas para que NO empujen el header hacia abajo */
+.spooky-web-top-left,
+.spooky-web-top-right {
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 999 !important;
+    pointer-events: none !important; /* Permite dar clic a través de ellas */
+}
+
+.spooky-web-top-left {
+    left: 0 !important;
+}
+
+.spooky-web-top-right {
+    right: 0 !important;
+}
+
+/* Si tu canvas de partículas también ocupa espacio arriba, lo fijamos al fondo */
+canvas {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    pointer-events: none !important;
+    z-index: 998 !important;
+}
+
+/* 2. Ajustes exclusivos para pantallas de celular */
+@media (max-width: 768px) {
+    /* Hacer las telarañas más discretas en móvil */
+    .spooky-web-top-left,
+    .spooky-web-top-right {
+        width: 85px !important;
+        height: 85px !important;
+    }
+
+    /* Quitar márgenes o rellenos superiores extra en el body/header */
+    body, header {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    /* Ajustar el botón "Modo Spooky" para que sea más compacto en celular */
+    button[class*="spooky"], 
+    #spooky-toggle, 
+    .spooky-toggle {
+        transform: scale(0.85);
+        transform-origin: bottom left;
+        bottom: 12px !important;
+        left: 10px !important;
+        padding: 6px 12px !important;
+        font-size: 13px !important;
+    }
+}
