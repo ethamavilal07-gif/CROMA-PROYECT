@@ -148,44 +148,63 @@
     <script src="./assets/js/main.js"></script>
     <script src="./assets/js/halloween.js" defer></script>
 
+    
     <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Buscamos todos los selectores y la imagen principal del producto
-    const selects = document.querySelectorAll('select');
-    // Ajusta este selector si tu imagen principal tiene un id (ej. '#imagen-producto')
-    const imagenProducto = document.querySelector('main img, .producto-imagen img, .card img, img[alt*="Playera"]');
+    let imagenOriginal = '';
 
-    if (!imagenProducto) return;
+    const actualizarFotoPlayera = () => {
+        // 1. Buscamos todos los selects que existen actualmente en la página
+        const selects = document.querySelectorAll('select');
+        let selectTipo = null;
 
-    // Guardamos la imagen original (la tipo polo) para restaurarla si cambian de opción
-    let imagenOriginal = imagenProducto.src;
+        selects.forEach(s => {
+            const tieneBasica = Array.from(s.options).some(opt =>
+                opt.text.toLowerCase().includes('básica') || opt.text.toLowerCase().includes('basica')
+            );
+            if (tieneBasica) selectTipo = s;
+        });
 
-    selects.forEach(select => {
-        // Detectamos cuál es el select que tiene la opción "Playera Básica"
-        const tienePlayeraBasica = Array.from(select.options).some(opt => 
-            opt.text.toLowerCase().includes('básica') || opt.text.toLowerCase().includes('basica')
+        if (!selectTipo) return;
+
+        // 2. Buscamos específicamente la imagen principal (la que carga polo.png y NO está en el carrusel)
+        const todasLasImagenes = Array.from(document.querySelectorAll('img'));
+        const imgProducto = todasLasImagenes.find(img =>
+            img.src.includes('polo.png') ||
+            img.src.includes('playera-basica-poliester.png') ||
+            img.id.toLowerCase().includes('prod') ||
+            img.id.toLowerCase().includes('main')
         );
 
-        if (tienePlayeraBasica) {
-            const actualizarImagen = () => {
-                const opcionElegida = select.options[select.selectedIndex].text.toLowerCase();
+        if (!imgProducto) return;
 
-                if (opcionElegida.includes('básica') || opcionElegida.includes('basica')) {
-                    // 👉 CAMBIA ESTA RUTA por la ruta real de tu foto de playera básica:
-                    imagenProducto.src = 'assets/img/playera-basica-poliester.png';
-                } else {
-                    // Regresa a la foto original (ej. Tipo Polo)
-                    imagenProducto.src = imagenOriginal;
-                }
-            };
+        // Guardamos la imagen original (polo.png) la primera vez
+        if (!imagenOriginal && !imgProducto.src.includes('playera-basica-poliester.png')) {
+            imagenOriginal = imgProducto.src;
+        }
 
-            // Escuchar cada vez que el usuario cambie la opción
-            select.addEventListener('change', actualizarImagen);
+        // 3. Revisamos qué opción está seleccionada y cambiamos la imagen
+        const textoOpcion = selectTipo.options[selectTipo.selectedIndex].text.toLowerCase();
 
-            // Ejecutar una vez al cargar por si "Playera Básica" ya viene seleccionada por defecto
-            actualizarImagen();
+        if (textoOpcion.includes('básica') || textoOpcion.includes('basica')) {
+            if (!imgProducto.src.includes('playera-basica-poliester.png')) {
+                imgProducto.src = './assets/img/playera-basica-poliester.png';
+            }
+        } else if (imagenOriginal) {
+            imgProducto.src = imagenOriginal;
+        }
+    };
+
+    // Escuchar cualquier cambio en cualquier <select> de la página
+    document.addEventListener('change', (e) => {
+        if (e.target.tagName === 'SELECT') {
+            actualizarFotoPlayera();
         }
     });
+
+    // Ejecutar después de que main.js y halloween.js hayan cargado el producto
+    setTimeout(actualizarFotoPlayera, 150);
+    setTimeout(actualizarFotoPlayera, 500);
 });
 </script>
 </body>
