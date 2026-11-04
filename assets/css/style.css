@@ -675,7 +675,7 @@ h1, h2, h3 {
     border-top: 1px solid #EAEAEA;
 }
 /* ===================================================
-   ADAPTACIÓN RESPONSIVA PARA CELULARES (MOBILE)
+ADAPTACIÓN RESPONSIVA PARA CELULARES (MOBILE)
    =================================================== */
 @media (max-width: 500px) {
     /* Evitar que cualquier elemento cause scroll horizontal en el celular */

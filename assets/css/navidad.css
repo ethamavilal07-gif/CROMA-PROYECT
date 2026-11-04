@@ -1,0 +1,577 @@
+/* ==========================================================================
+   CROMA PROJECT - TEMA NAVIDEÑO ELEGANTE ("Gothic Wine Christmas")
+   Conserva los colores base (Vino Tinto #6B1D2F y Crema #F8F5F0)
+   incorporando acentos dorados, nieve suave, ramas de pino y el trineo de Santa.
+   ========================================================================== */
+
+:root {
+    --xmas-gold: #0bb83f 100% /* compatibilidad de variables previas */;
+    --xmas-gold-soft: rgba(6, 165, 67, 0.15);
+    --xmas-red: #D32F2F;
+    --xmas-pine: #1E4620;
+    --xmas-glow: 0 0 18px rgba(6, 165, 67, 0.45);
+    --xmas-wine-glow: 0 0 18px rgba(107, 29, 47, 0.5);
+    --spooky-orange: #0bb83f 100% /* compatibilidad de variables previas */
+    --spooky-glow: var(--xmas-glow);
+}
+
+/* --------------------------------------------------------------------------
+   1. GUIRNALDAS / RAMAS DE ACEBO EN ESQUINAS SUPERIORES
+   -------------------------------------------------------------------------- */
+.spooky-web-top-left,
+.spooky-web-top-right {
+    position: fixed !important;
+    top: 0 !important;
+    width: 130px;
+    height: 130px;
+    z-index: 999 !important;
+    pointer-events: none !important;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.spooky-web-top-left {
+    left: 0 !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 Q 30 10, 50 40 Q 60 70, 70 100' stroke='%231E4620' stroke-width='4' fill='none'/%3E%3Cpath d='M0 0 Q 60 10, 85 45' stroke='%232E6930' stroke-width='3' fill='none'/%3E%3Ccircle cx='45' cy='35' r='5' fill='%236B1D2F'/%3E%3Ccircle cx='52' cy='32' r='4.5' fill='%23D32F2F'/%3E%3Ccircle cx='48' cy='42' r='4' fill='%23B71C1C'/%3E%3Ccircle cx='80' cy='40' r='5' fill='%23D32F2F'/%3E%3Ccircle cx='86' cy='45' r='4' fill='%236B1D2F'/%3E%3C/svg%3E") no-repeat top left;
+    background-size: contain;
+}
+
+.spooky-web-top-right {
+    right: 0 !important;
+    transform: scaleX(-1);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 Q 30 10, 50 40 Q 60 70, 70 100' stroke='%231E4620' stroke-width='4' fill='none'/%3E%3Cpath d='M0 0 Q 60 10, 85 45' stroke='%232E6930' stroke-width='3' fill='none'/%3E%3Ccircle cx='45' cy='35' r='5' fill='%236B1D2F'/%3E%3Ccircle cx='52' cy='32' r='4.5' fill='%23D32F2F'/%3E%3Ccircle cx='48' cy='42' r='4' fill='%23B71C1C'/%3E%3Ccircle cx='80' cy='40' r='5' fill='%23D32F2F'/%3E%3Ccircle cx='86' cy='45' r='4' fill='%236B1D2F'/%3E%3C/svg%3E") no-repeat top left;
+    background-size: contain;
+}
+
+/* --------------------------------------------------------------------------
+   2. CONTENEDOR DE SANTA CLAUS VOLADOR (DERECHA A IZQUIERDA - ORIENTACIÓN ORIGINAL)
+   -------------------------------------------------------------------------- */
+.santa-flyer {
+    position: fixed !important;
+    top: 70px !important;
+    right: -280px !important;     /* Empieza fuera de la pantalla por la derecha */
+    left: auto !important;
+    width: 220px !important;
+    height: auto !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
+    animation: fly-across-rtl 18s linear infinite !important;
+}
+
+@keyframes fly-across-rtl {
+    0% {
+        transform: translateX(0) translateY(0) rotate(-4deg);
+        opacity: 0;
+    }
+    3% {
+        opacity: 1;
+    }
+    25% {
+        transform: translateX(-30vw) translateY(20px) rotate(2deg);
+    }
+    50% {
+        transform: translateX(-55vw) translateY(-10px) rotate(-3deg);
+    }
+    75% {
+        transform: translateX(-80vw) translateY(15px) rotate(3deg);
+    }
+    97% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(calc(-100vw - 340px)) translateY(-5px) rotate(-1deg);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .santa-flyer {
+        width: 140px !important;
+        top: 55px !important;
+        right: -200px !important;
+    }
+}
+
+/* Ajuste para pantallas móviles */
+@media (max-width: 768px) {
+    .santa-flyer {
+        width: 150px;
+        height: 90px;
+        top: 50px;
+        left: -200px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+3. ENCABEZADO Y LOGO CON GORRO NAVIDEÑO
+   -------------------------------------------------------------------------- */
+.main-header {
+    border-bottom: 2px solid rgba(32, 177, 44, 0.25) !important;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(8px);
+}
+
+.logo {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.logo::after {
+    content: "🎅";
+    position: absolute;
+    top: -10px;
+    right: -16px;
+    font-size: 1.25rem;
+    filter: drop-shadow(0 2px 4px rgba(211, 47, 47, 0.4));
+    animation: xmas-hat-tilt 3s ease-in-out infinite alternate;
+}
+
+@keyframes xmas-hat-tilt {
+    0% { transform: translateY(0) rotate(-8deg); }
+    100% { transform: translateY(-3px) rotate(6deg); }
+}
+
+/* --------------------------------------------------------------------------
+4. BOTÓN DE CARRITO TEMÁTICO
+   -------------------------------------------------------------------------- */
+.btn-cart {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8A253C 100%) !important;
+    box-shadow: 0 3px 12px rgba(107, 29, 47, 0.35);
+    position: relative;
+    overflow: visible;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn-cart:hover {
+    box-shadow: var(--xmas-glow), 0 4px 15px rgba(107, 29, 47, 0.45) !important;
+    transform: translateY(-2px) scale(1.03);
+}
+
+/* --------------------------------------------------------------------------
+5. BUSCADOR CON RESPLANDOR DORADO
+   -------------------------------------------------------------------------- */
+.ae-search-box {
+    border-bottom: 1.5px solid rgba(107, 29, 47, 0.4) !important;
+    transition: all 0.3s ease;
+}
+
+.ae-search-box:focus-within {
+    border-bottom-color: var(--xmas-gold) !important;
+    box-shadow: 0 4px 12px rgba(32, 177, 44, 0.35);
+}
+
+.ae-search-box .search-icon {
+    transition: transform 0.3s ease;
+}
+
+.ae-search-box:focus-within .search-icon {
+    transform: rotate(15deg) scale(1.15);
+}
+
+/* --------------------------------------------------------------------------
+6. CARRUSEL
+   -------------------------------------------------------------------------- */
+.banner-carousel {
+    position: relative;
+    background: radial-gradient(circle at center, #FCFBF9 0%, #F5EFEB 100%) !important;
+}
+
+.carousel-arrow {
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: var(--primary-color) !important;
+    box-shadow: 0 4px 12px rgba(107, 29, 47, 0.18) !important;
+    border: 1px solid rgba(32, 177, 44, 0.3) !important;
+}
+
+.carousel-arrow:hover {
+    background: var(--primary-color) !important;
+    color: #FFF !important;
+    box-shadow: 0 0 16px rgba(32, 177, 44, 0.6) !important;
+    border-color: var(--xmas-gold) !important;
+}
+
+/* --------------------------------------------------------------------------
+7. BANNER DE FRASE
+   -------------------------------------------------------------------------- */
+.quote-banner {
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-serif {
+    position: relative;
+    z-index: 2;
+}
+
+.highlight-pink {
+    background: linear-gradient(135deg, #6B1D2F 0%, #9E2A44 50%, #0bb83f 100%) !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 15px rgba(32, 177, 44, 0.3);
+    border-radius: 25px;
+    padding: 4px 22px !important;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.highlight-pink:hover {
+    transform: scale(1.04) rotate(-1deg);
+    box-shadow: var(--xmas-glow);
+}
+
+.quote-handwriting {
+    text-shadow: 2px 2px 8px rgba(107, 29, 47, 0.2);
+    position: relative;
+}
+
+.quote-handwriting::after {
+    content: " ❄️";
+    font-size: 2rem;
+    vertical-align: middle;
+    display: inline-block;
+    animation: snowflake-twirl 4s ease-in-out infinite alternate;
+}
+
+@keyframes snowflake-twirl {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-4px) rotate(35deg); }
+}
+
+.underline-brush {
+    background: linear-gradient(90deg, #6B1D2F 0%, var(--xmas-gold) 100%) !important;
+    box-shadow: 0 2px 8px rgba(32, 177, 44, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+8. CATÁLOGO & PRODUCTOS
+   -------------------------------------------------------------------------- */
+.catalog h2 {
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.catalog h2::before {
+    content: "🎄 ";
+    font-size: 1.6rem;
+    vertical-align: middle;
+}
+
+.catalog h2::after {
+    content: " ✨";
+    font-size: 1.6rem;
+    vertical-align: middle;
+}
+
+.product-card {
+    position: relative;
+    border: 1px solid rgba(107, 29, 47, 0.08);
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    overflow: hidden;
+}
+
+.product-card::before {
+    content: "🎁 Edición Navideña";
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0bb83f 100%);
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.35);
+    z-index: 5;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(107, 29, 47, 0.16), 0 0 16px rgba(32, 177, 44, 0.25) !important;
+    border-color: rgba(32, 177, 44, 0.45);
+}
+
+.product-card:hover::before {
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(32, 177, 44, 0.6);
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.03);
+    transition: transform 0.4s ease;
+}
+
+.btn-add {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8A253C 100%) !important;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease !important;
+}
+
+.btn-add:hover {
+    background: linear-gradient(135deg, #8A253C 0%, #0bb83f 100%) !important;
+    box-shadow: 0 4px 15px rgba(32, 177, 44, 0.4) !important;
+    transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+9. BOTONES DE INFORMACIÓN
+   -------------------------------------------------------------------------- */
+.info-btn {
+    border: 2px solid rgba(107, 29, 47, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(107, 29, 47, 0.05) !important;
+}
+
+.info-btn:hover {
+    border-color: var(--xmas-gold) !important;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.25) !important;
+    transform: translateY(-3px) scale(1.01);
+}
+
+/* --------------------------------------------------------------------------
+10. TOAST NOTIFICACIÓN
+   -------------------------------------------------------------------------- */
+.toast {
+    background: linear-gradient(135deg, #3B0E19 0%, #6B1D2F 70%, #0bb83f 100%) !important;
+    border: 1px solid rgba(32, 177, 44, 0.3) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), var(--xmas-glow) !important;
+}
+
+/* --------------------------------------------------------------------------
+11. MODAL DEL CARRITO
+   -------------------------------------------------------------------------- */
+.modal-content {
+    border: 2px solid rgba(107, 29, 47, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(107, 29, 47, 0.15);
+}
+
+.modal-content h2::before {
+    content: "🎁 ";
+}
+
+/* --------------------------------------------------------------------------
+12. CANVAS DE NIEVE
+   -------------------------------------------------------------------------- */
+#spooky-particles-canvas,
+canvas {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    pointer-events: none !important;
+    z-index: 996 !important;
+}
+
+/* --------------------------------------------------------------------------
+13. BOTÓN FLOTANTE (TOGGLE)
+   -------------------------------------------------------------------------- */
+.spooky-toggle-btn {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    z-index: 999;
+    background: linear-gradient(135deg, #4A1320 0%, #6B1D2F 100%);
+    color: #FFFFFF;
+    border: 2px solid var(--xmas-gold);
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25), 0 0 12px rgba(0, 255, 98, 0.35);
+    transition: all 0.3s ease;
+}
+
+.spooky-toggle-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.3), var(--xmas-glow);
+}
+
+.spooky-toggle-btn .toggle-icon {
+    font-size: 1.1rem;
+    animation: xmas-hat-tilt 2.5s ease-in-out infinite alternate;
+}
+
+/* Ocultar elementos al desactivar */
+body.spooky-off .spooky-web-top-left,
+body.spooky-off .spooky-web-top-right,
+body.spooky-off .santa-flyer,
+body.spooky-off #spooky-particles-canvas,
+body.spooky-off .product-card::before,
+body.spooky-off .logo::after {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+14. PÁGINA DE DETALLE Y PERSONALIZADOR
+   -------------------------------------------------------------------------- */
+.product-detail-layout .form-group select:not(:disabled):focus,
+.product-detail-layout .form-group input:focus,
+.product-detail-layout .customizer-control:focus {
+    border-color: var(--xmas-gold) !important;
+    outline: 2px solid rgba(32, 177, 44, 0.3) !important;
+    box-shadow: 0 0 14px rgba(32, 177, 44, 0.3) !important;
+}
+
+.btn-add-to-cart {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8A253C 100%) !important;
+    box-shadow: 0 0 0 2px rgba(107, 29, 47, 0.12), 0 4px 15px rgba(107, 29, 47, 0.25) !important;
+}
+
+.btn-add-to-cart:hover {
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.35), var(--xmas-glow) !important;
+    transform: translateY(-2px);
+}
+
+#prev-gallery-btn,
+#next-gallery-btn {
+    background: var(--primary-color) !important;
+    box-shadow: 0 2px 8px rgba(107, 29, 47, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+#prev-gallery-btn:hover,
+#next-gallery-btn:hover {
+    background: var(--xmas-gold) !important;
+    color: #4A1320 !important;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6) !important;
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+/* --------------------------------------------------------------------------
+15. AJUSTES RESPONSIVOS PARA MÓVIL
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .spooky-web-top-left,
+    .spooky-web-top-right {
+        width: 85px !important;
+        height: 85px !important;
+    }
+
+    .santa-flyer {
+        font-size: 1.6rem;
+        top: 60px;
+    }
+
+    body, header {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .spooky-toggle-btn,
+    button[class*="spooky"], 
+    #spooky-toggle {
+        transform: scale(0.85);
+        transform-origin: bottom left;
+        bottom: 12px !important;
+        left: 10px !important;
+        padding: 6px 12px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* ==========================================================================
+EFECTO ESCARCHADO Y CAPA DE HIELO PARA BOTONES
+   ========================================================================== */
+
+/* 1. Base escarchada general para botones interactivos */
+.btn-add,
+.btn-cart,
+.btn-add-to-cart,
+.info-btn {
+    position: relative !important;
+    overflow: hidden !important;
+    /* Resplandor cristalino y borde blanco escarchado */
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 255, 255, 0.65),      /* Línea de escarcha superior */
+        inset 0 -1px 3px rgba(180, 220, 255, 0.25),     /* Reflejo azulado sutil */
+        0 4px 14px rgba(107, 29, 47, 0.25) !important;
+    backdrop-filter: blur(3px);
+}
+
+/* 2. Capa de nieve/escarcha acumulada en el borde superior (::before) */
+.btn-add::before,
+.btn-cart::before,
+.btn-add-to-cart::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 35% !important;
+    /* Degradado blanco nieve translúcido */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.08) 75%, transparent 100%) !important;
+    border-radius: inherit !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+/* 3. Destello de hielo que recorre el botón al pasar el cursor (::after) */
+.btn-add::after,
+.btn-cart::after,
+.btn-add-to-cart::after,
+.info-btn::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -50% !important;
+    left: -120% !important;
+    width: 60% !important;
+    height: 200% !important;
+    background: linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.35) 45%,
+        rgba(220, 245, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0.35) 55%,
+        rgba(255, 255, 255, 0) 100%
+    ) !important;
+    transform: rotate(25deg) !important;
+    pointer-events: none !important;
+    transition: none !important;
+    z-index: 2 !important;
+}
+
+/* Disparar el destello brillante en hover */
+.btn-add:hover::after,
+.btn-cart:hover::after,
+.btn-add-to-cart:hover::after,
+.info-btn:hover::after {
+    left: 160% !important;
+    transition: left 0.75s ease-in-out !important;
+}
+
+/* 4. Resplandor gélido + dorado al interactuar (Hover) */
+.btn-add:hover,
+.btn-cart:hover,
+.btn-add-to-cart:hover {
+    border-color: rgba(255, 255, 255, 0.85) !important;
+    box-shadow: 
+        inset 0 1px 3px rgba(255, 255, 255, 0.8),
+        0 0 16px rgba(200, 235, 255, 0.6),            /* Aura de hielo */
+        0 4px 18px rgba(42, 99, 59, 0.35) !important; /* Resplandor cálido */
+    transform: translateY(-2px) !important;
+}
+
+/* Mantener el texto siempre por encima de las capas de escarcha */
+.btn-add *,
+.btn-cart *,
+.btn-add-to-cart *,
+.info-btn * {
+    position: relative !important;
+    z-index: 3 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
