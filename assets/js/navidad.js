@@ -28,7 +28,7 @@ function initChristmasFeatures() {
 
         const santaImg = document.createElement('img');
         // Ruta absoluta desde la raíz de tu proyecto para evitar fallos de rutas relativas:
-        santaImg.src = '/CROMA-PROYECT/assets/img/santa-trineo.png'; 
+        santaImg.src = 'assets/img/santa-trineo.png'; 
         santaImg.alt = 'Santa Claus';
         santaImg.style.width = '100%';
         santaImg.style.height = 'auto';
