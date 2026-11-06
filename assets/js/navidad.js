@@ -119,10 +119,10 @@ function initSnowCanvas() {
                 ctx.shadowBlur = 4;
                 ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
             } else {
-    ctx.fillStyle = `rgba(168, 224, 255, ${p.opacity})`;
-    ctx.shadowBlur = 8;
-    ctx.shadowColor = 'rgba(120, 205, 255, 0.95)';
-}
+                ctx.fillStyle = `rgba(168, 224, 255, ${p.opacity})`;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = 'rgba(120, 205, 255, 0.95)';
+            }
 
             ctx.fill();
             ctx.shadowBlur = 0; // Reset
