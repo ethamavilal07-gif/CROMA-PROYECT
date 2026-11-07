@@ -1,0 +1,127 @@
+/* CARRUSEL HORIZONTAL A PANTALLA COMPLETA */
+.banner-carousel {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    background-color: #FAF6F5;
+    height: 460px;
+    overflow: hidden;
+}
+
+.carousel-track-container {
+    width: 100%;
+    max-width: 1200px; /* Ancho máximo para que no se estire infinito en pantallas grandes */
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: auto;
+    max-height: 480px; /* Controla la altura máxima para que no ocupe toda la pantalla */
+    object-fit: contain; 
+    display: block;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--primary-color);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.carousel-arrow:hover {
+    background: var(--primary-color);
+    color: #FFF;
+}
+
+.carousel-arrow.prev { left: 25px; }
+.carousel-arrow.next { right: 25px; }
+
+/* BANNER DE FRASE PROMOCIONAL */
+.quote-banner {
+    text-align: center;
+    padding: 40px 20px 20px 20px;
+    background-color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.quote-container {
+    max-width: 1050px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.quote-serif {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.highlight-pink {
+    background-color: #FFB3CB;
+    color: var(--primary-color);
+    padding: 3px 18px;
+    border-radius: 25px;
+    display: inline-block;
+    font-style: italic;
+    margin-left: 5px;
+}
+
+.quote-handwriting-wrapper {
+    margin-top: 15px;
+}
+
+.quote-handwriting {
+    font-family: 'Caveat', cursive;
+    font-size: 3.6rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    position: relative;
+    display: inline-block;
+    line-height: 1;
+}
+
+.underline-brush {
+    display: block;
+    width: 115%;
+    height: 4px;
+    background-color: #E85D75;
+    border-radius: 4px;
+    margin: 6px auto 0 -7.5%;
+    transform: rotate(-1.5deg);
+}

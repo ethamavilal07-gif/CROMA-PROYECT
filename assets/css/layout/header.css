@@ -1,0 +1,184 @@
+/* HEADER */
+.main-header {
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-img {
+    height: 48px;
+    width: auto;
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover {
+    color: var(--primary-color);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* BUSCADOR */
+.ae-search-box {
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid #777;
+    padding: 2px 5px;
+}
+
+.ae-search-box .search-icon {
+    font-size: 0.85rem;
+    color: #555;
+    margin-right: 6px;
+}
+
+.ae-search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.9rem;
+    width: 110px;
+    transition: width 0.3s ease;
+}
+
+.ae-search-box input:focus {
+    width: 160px;
+}
+
+.btn-cart {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: background-color 0.3s;
+}
+
+.btn-cart:hover {
+    background-color: var(--accent-color);
+}
+
+/* ==========================================================================
+   DROPDOWN NAVEGACIÓN (CATÁLOGO)
+   ========================================================================== */
+
+/* 1. Contenedor relativo en la barra de navegación */
+.main-nav .nav-dropdown {
+    position: relative !important;
+    display: inline-block !important;
+    cursor: pointer;
+    padding-bottom: 10px; /* Área de amortiguación para evitar que se cierre */
+    margin-bottom: -10px;
+}
+
+/* 2. Disparador de texto "Catálogo ▾" */
+.main-nav .dropdown-trigger {
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #333333;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.main-nav .nav-dropdown:hover .dropdown-trigger {
+    color: #6B1D2F;
+}
+
+/* 3. Submenú flotante: oculto por defecto */
+.main-nav .dropdown-menu {
+    display: none !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background-color: #ffffff !important;
+    min-width: 205px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 8px !important;
+    padding: 8px 0 !important;
+    margin: 0 !important; /* Sin margen para evitar el hueco invisible */
+    list-style: none !important;
+    z-index: 99999 !important;
+    border: 1px solid rgba(107, 29, 47, 0.12) !important;
+    flex-direction: column !important;
+}
+
+/* Puente invisible superior: mantiene activo el hover al deslizar el mouse */
+.main-nav .dropdown-menu::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -15px !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 15px !important;
+    background: transparent !important;
+}
+
+/* 4. Mostrar al pasar el cursor (tanto en el disparador como sobre el menú) */
+.main-nav .nav-dropdown:hover .dropdown-menu,
+.main-nav .dropdown-menu:hover {
+    display: flex !important;
+}
+
+/* 5. Cada ítem y enlace dentro del desplegable */
+.main-nav .dropdown-menu li {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.main-nav .dropdown-menu li a {
+    display: block !important;
+    width: 100% !important;
+    padding: 11px 18px !important;
+    color: #444444 !important;
+    text-decoration: none !important;
+    font-size: 0.88rem !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    border: none !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.main-nav .dropdown-menu li a:hover {
+    background-color: rgba(107, 29, 47, 0.08) !important;
+    color: #6B1D2F !important;
+}

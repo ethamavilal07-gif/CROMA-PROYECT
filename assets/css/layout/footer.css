@@ -1,0 +1,82 @@
+/* SECCIÓN DE BOTONES INFORMATIVOS (FINAL DE PÁGINA) */
+.info-buttons-section {
+    width: 100%;
+    padding: 30px 20px 50px 20px;
+    background-color: var(--secondary-color);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-buttons-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.info-btn {
+    flex: 1;
+    min-width: 250px;
+    max-width: 380px;
+    background:
+        linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+        linear-gradient(to bottom right, var(--primary-color) 0%, rgba(107, 29, 47, 0) 60%) border-box;
+    border: 2px solid transparent;
+    border-radius: 15px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #222222;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+}
+
+.info-btn:hover {
+    background:
+        linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+        linear-gradient(to bottom right, var(--primary-color) 0%, rgba(107, 29, 47, 0) 60%) border-box;
+    transform: translateY(-2px);
+    color: var(--primary-color);
+}
+
+.info-btn:hover,
+.info-btn:focus-visible {
+    animation: info-btn-outline-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes info-btn-outline-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(107, 29, 47, 0.16);
+    }
+    50% {
+        box-shadow: 0 0 0 5px rgba(107, 29, 47, 0.32);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .info-btn:hover,
+    .info-btn:focus-visible {
+        animation: none;
+    }
+}
+
+.info-btn .btn-icon {
+    font-size: 1.2rem;
+}
+
+/* FOOTER */
+.main-footer {
+    background-color: var(--primary-color);
+    color: #FFFFFF; text-align: center;
+    padding: 25px 20px;
+}
+
+.main-footer h3 { color: #FFFFFF; margin-bottom: 5px; }

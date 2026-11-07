@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Sublimados | CROMA Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/navidad.css">
+</head>
+<body>
+
+    <div id="toast-notification" class="toast"></div>
+
+    <!-- ENCABEZADO / HEADER -->
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="./assets/img/logo.png" alt="CROMA Project Logo" class="logo-img">
+            </a>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="https://www.instagram.com/croma_.project?stkn=eDNrcGwwYXp2ZTho" target="_blank">Instagram</a></li>
+
+                    <li class="nav-dropdown">
+                        <span class="dropdown-trigger">Catálogo ▾</span>
+                        <ul class="dropdown-menu">
+                            <li><a href="catalogo.html">Catálogo General</a></li>
+                            <li><a href="productos-sublimados.html">Productos Sublimados</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="index.html#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <div class="ae-search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="sub-search-input" placeholder="Buscar diseño...">
+                </div>
+                <button id="cart-btn" class="btn-cart">
+                    🛒 Carrito (<span id="cart-count">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="sublimados-main">
+        <div class="sublimados-heading">
+            <h2>Nuestro Catálogo de Sublimados</h2>
+            <p>Selecciona cualquiera de nuestros productos para personalizarlo a tu gusto.</p>
+        </div>
+
+        <!-- BARRA DE FILTROS POR CATEGORÍA -->
+        <div class="sublimados-controls">
+            <div class="sublimados-filter-bar">
+                <button class="filter-chip active" data-categoria="todos">Todos (57)</button>
+                <button class="filter-chip" data-categoria="playeras">Playeras (12)</button>
+                <button class="filter-chip" data-categoria="hoodies">Hoodies (11)</button>
+                <button class="filter-chip" data-categoria="polo">Playeras Polo (10)</button>
+                <button class="filter-chip" data-categoria="tazas">Tazas (11)</button>
+                <button class="filter-chip" data-categoria="totebags">Tote Bags (9)</button>
+                <button class="filter-chip" data-categoria="gorras">Gorras (4)</button>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR DE PRODUCTOS SUBLIMADOS -->
+        <div id="sublimados-grid" class="sublimados-grid"></div>
+
+        <!-- MODAL PARA PERSONALIZAR Y AGREGAR AL CARRITO -->
+        <div id="customizer-modal" class="customizer-modal-overlay">
+            <div class="customizer-box">
+                <span class="customizer-close" id="customizer-close-btn">&times;</span>
+                <div class="customizer-header">
+                    <img id="cust-img" src="" alt="Producto">
+                    <div>
+                        <span id="cust-cat" class="sub-category-tag"></span>
+                        <h3 id="cust-title" class="customizer-title"></h3>
+                        <p id="cust-price" class="customizer-price"></p>
+                    </div>
+                </div>
+
+                <form id="customizer-form">
+                    <div class="customizer-field" id="cust-size-group">
+                        <label for="cust-size">Selecciona la Talla:</label>
+                        <select id="cust-size" required>
+                            <option value="CH">Chica (CH)</option>
+                            <option value="M" selected>Mediana (M)</option>
+                            <option value="G">Grande (G)</option>
+                            <option value="XL">Extra Grande (XL)</option>
+                        </select>
+                    </div>
+
+                    <div class="customizer-field" id="cust-wearer-group" style="display: none;">
+                        <label for="cust-wearer">¿Para quién es la prenda?</label>
+                        <input type="text" id="cust-wearer" placeholder="Ej. Dama, caballero, niño...">
+                    </div>
+
+                    <div class="customizer-field">
+                        <label for="cust-notes">Personalización adicional (Nombre, frase o indicación):</label>
+                        <textarea id="cust-notes" placeholder="Ej. Poner el nombre 'Carolina' debajo del diseño, o dejar el diseño tal cual..."></textarea>
+                    </div>
+
+                    <div class="customizer-field">
+                        <label for="cust-qty">Cantidad:</label>
+                        <input type="number" id="cust-qty" value="1" min="1" max="50" required>
+                    </div>
+
+                    <button type="submit" class="btn-custom-sub btn-full">
+                        Agregar al Carrito 🛒
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL DEL CARRITO -->
+        <div id="cart-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Tu Carrito de Compras</h2>
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <h3>Total: $<span id="cart-total-price">0</span> MXN</h3>
+                </div>
+                <button id="whatsapp-send-btn" class="btn-whatsapp">
+                    Enviar Pedido por WhatsApp 📲
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer" style="background-color: #631d2e; color: #ffffff; text-align: center; padding: 25px 15px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h3 style="margin: 0 0 5px 0; font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #ffffff;">CROMA Project</h3>
+            <p style="margin: 0 0 10px 0; font-size: 0.9rem; opacity: 0.9;">Sublimados y Productos Personalizados</p>
+            <p style="margin: 0 0 12px 0; font-size: 0.85rem; opacity: 0.8;">© 2026 Todos los derechos reservados.</p>
+            <p style="margin: 0 0 12px 0; font-size: 0.85rem; opacity: 0.8;">Proyecto realizado por Soluciones T0TA1 tics</p>
+            <p style="margin: 0 0 12px 0; font-size: 0.85rem; opacity: 0.8;">Contacto 322 139 5546</p>
+            <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.85rem;">
+                <a href="aviso-de-privacidad.html" style="color: #ffffff; text-decoration: underline; opacity: 0.9;">Aviso de Privacidad</a>
+                <span style="opacity: 0.5;">|</span>
+                <a href="terminos-y-condiciones.html" style="color: #ffffff; text-decoration: underline; opacity: 0.9;">Términos y Condiciones</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/sublimados.js"></script>
+    <script src="./assets/js/navidad.js" defer></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

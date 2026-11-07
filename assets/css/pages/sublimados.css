@@ -1,0 +1,338 @@
+/* ==========================================================================
+    CATÁLOGO DE PRODUCTOS SUBLIMADOS Y MODAL PERSONALIZADOR
+   ========================================================================== */
+
+.sublimados-main {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: 65vh;
+}
+
+.sublimados-heading {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.sublimados-heading h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #2b2b2b;
+    margin-bottom: 8px;
+}
+
+.sublimados-heading p {
+    color: #666666;
+    font-size: 1rem;
+}
+
+.sublimados-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 35px;
+}
+
+.sublimados-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filter-chip {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1.5px solid rgba(107, 29, 47, 0.25);
+    background-color: #ffffff;
+    color: #444444;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.filter-chip:hover {
+    border-color: #6B1D2F;
+    color: #6B1D2F;
+    transform: translateY(-2px);
+}
+
+.filter-chip.active {
+    background: linear-gradient(135deg, #6B1D2F 0%, #8A253C 100%);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(107, 29, 47, 0.3);
+}
+
+.sublimados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.sublimados-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666666;
+    padding: 40px;
+}
+
+.sub-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid rgba(107, 29, 47, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.sub-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(107, 29, 47, 0.15);
+}
+
+.sub-img-box {
+    width: 100%;
+    height: 250px;
+    background-color: #faf8f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.sub-img-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.35s ease;
+}
+
+.sub-card:hover .sub-img-box img {
+    transform: scale(1.06);
+}
+
+.sub-info {
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sub-category-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8A253C;
+    font-weight: 600;
+}
+
+.sub-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2b2b2b;
+    margin: 0;
+}
+
+.sub-price {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #6B1D2F;
+    margin: 2px 0 8px 0;
+}
+
+.sub-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-custom-sub {
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #6B1D2F 0%, #8A253C 100%);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-custom-sub:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.btn-full {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95rem;
+}
+
+/* Modal de Personalización */
+.customizer-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+    backdrop-filter: blur(4px);
+}
+
+.customizer-modal-overlay.active {
+    display: flex;
+}
+
+.customizer-box {
+    background: #ffffff;
+    border-radius: 14px;
+    max-width: 500px;
+    width: 100%;
+    padding: 25px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    position: relative;
+    border: 2px solid rgba(107, 29, 47, 0.15);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.customizer-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 1.6rem;
+    color: #666666;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.customizer-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 15px;
+}
+
+.customizer-header img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: #faf8f5;
+    border-radius: 8px;
+    padding: 6px;
+    border: 1px solid #eaeaea;
+}
+
+.customizer-title {
+    margin: 4px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+}
+
+.customizer-price {
+    margin: 0;
+    color: #6B1D2F;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.customizer-field {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.customizer-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 6px;
+}
+
+.customizer-field select,
+.customizer-field input,
+.customizer-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.customizer-field textarea {
+    resize: vertical;
+    min-height: 65px;
+}
+
+/* Ítems del carrito en vista de sublimados */
+.cart-sub-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.cart-sub-thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #f9f9f9;
+}
+
+.cart-sub-details {
+    flex: 1;
+    text-align: left;
+}
+
+.cart-sub-name {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333333;
+}
+
+.cart-sub-qty {
+    color: #666666;
+}
+
+.cart-sub-subtotal {
+    font-weight: 700;
+    color: #6B1D2F;
+    font-size: 0.9rem;
+}
+
+.cart-sub-remove {
+    background: none;
+    border: none;
+    color: #c0392b;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
