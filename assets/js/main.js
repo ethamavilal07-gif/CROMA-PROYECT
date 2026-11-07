@@ -299,12 +299,18 @@ function renderProductDetailPage() {
     const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera';
     const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie") || categoriaSublimado === 'hoodie';
     
+    // NUEVA LÓGICA: Identificar si es Taza, Gorra o Tote Bag (Productos sin talla ni color configurable)
+    const esAccesorios = product.id === 3 || product.id === 4 || product.id === 5 || ['taza', 'gorra', 'totebag'].includes(categoriaSublimado);
+
     const requiereGenero = esPoliesterPolo || esBasica || esHoodie;
     const requiereTipoPlayera = esPoliesterPolo || esBasica; 
 
-    // Ocultar TOTALMENTE la selección de color si es sublimado
+    // Ocultar TOTALMENTE Talla y Color si es accesorio
+    if (sizeSelect && sizeSelect.parentElement) {
+        sizeSelect.parentElement.style.display = esAccesorios ? 'none' : 'block';
+    }
     if (colorSelect && colorSelect.parentElement) {
-        if (esSublimado) {
+        if (esSublimado || esAccesorios) {
             colorSelect.parentElement.style.display = 'none';
         } else {
             colorSelect.parentElement.style.display = 'block';
@@ -348,11 +354,11 @@ function renderProductDetailPage() {
                 elTipoPlayera.disabled = true;
                 elTipoPlayera.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
             }
-            if (sizeSelect) {
+            if (sizeSelect && !esAccesorios) {
                 sizeSelect.disabled = true;
                 sizeSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
             }
-            if (colorSelect && !esSublimado) {
+            if (colorSelect && !esSublimado && !esAccesorios) {
                 colorSelect.disabled = true;
                 colorSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
             }
@@ -372,12 +378,12 @@ function renderProductDetailPage() {
                 }
             }
 
-            if (sizeSelect && sizeSelect.disabled) {
+            if (sizeSelect && sizeSelect.disabled && !esAccesorios) {
                 sizeSelect.disabled = false;
                 loadSizes();
             }
 
-            if (colorSelect && !esSublimado) {
+            if (colorSelect && !esSublimado && !esAccesorios) {
                 colorSelect.disabled = false;
                 let availableColors = [];
                 if (esPoliesterPolo && colorMap.polo && colorMap.polo[selectedGen]) availableColors = colorMap.polo[selectedGen];
@@ -440,13 +446,13 @@ function renderProductDetailPage() {
                 tipoSeleccionado = elTipoPlayera.value;
                 if (!tipoSeleccionado || elTipoPlayera.disabled) return showToast("⚠️ Por favor selecciona el tipo de playera.");
             }
-            const selectedSize = sizeSelect ? sizeSelect.value : 'Única';
             
-            // Si es sublimado forzamos el color a "Predeterminado"
-            const selectedColor = esSublimado ? 'Predeterminado' : (colorSelect ? colorSelect.value : 'Estándar');
+            // Asignar valores por defecto a accesorios para que se guarden bien en el carrito sin bloquear
+            const selectedSize = esAccesorios ? product.sizes[0] : (sizeSelect ? sizeSelect.value : 'Única');
+            const selectedColor = (esSublimado || esAccesorios) ? 'Predeterminado' : (colorSelect ? colorSelect.value : 'Estándar');
 
-            if (!selectedSize || sizeSelect.disabled) return showToast("⚠️ Por favor selecciona la talla.");
-            if (!selectedColor && !esSublimado) return showToast("⚠️ Por favor selecciona el color.");
+            if (!esAccesorios && (!selectedSize || sizeSelect.disabled)) return showToast("⚠️ Por favor selecciona la talla.");
+            if (!esAccesorios && !esSublimado && !selectedColor) return showToast("⚠️ Por favor selecciona el color.");
 
             const customInput = document.getElementById('detail-custom');
             const customText = customInput && customInput.value.trim() ? customInput.value.trim() : "Sin detalle especificado";
