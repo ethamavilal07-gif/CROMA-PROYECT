@@ -225,14 +225,51 @@ function renderProductDetailPage() {
     if (!titleEl) return; 
 
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = parseInt(urlParams.get('id')) || 1;
-    const product = products.find(p => p.id === productId) || products[0];
+    const rawId = urlParams.get('id') || '1';
+    
+    let product;
+    let esSublimado = false;
+    let categoriaSublimado = '';
 
-    // Reiniciar posición del carrusel para el nuevo producto
+    // Detectar si el producto es del catálogo nuevo (ej. "sub-playera-1")
+    if (typeof rawId === 'string' && rawId.startsWith('sub-')) {
+        esSublimado = true;
+        const partes = rawId.split('-');
+        categoriaSublimado = partes[1];
+        const num = partes[2];
+
+        // Construir datos temporales para que la página funcione
+        let pName = "Producto Sublimado";
+        let pPrice = 180;
+        let pSizes = ["CH", "M", "G", "XG", "2XG"];
+        let imgUrl = `./assets/img/playeras/playera${num}.png`;
+
+        if (categoriaSublimado === 'playera') { pName = `Playera Sublimada Diseño #${num}`; pPrice = 180; imgUrl = `./assets/img/playeras/playera${num}.png`; }
+        else if (categoriaSublimado === 'hoodie') { pName = `Hoodie Sublimada Diseño #${num}`; pPrice = 450; pSizes = ["CH", "M", "G", "XG"]; imgUrl = `./assets/img/hoodies/hoodie${num}.png`; }
+        else if (categoriaSublimado === 'polo') { pName = `Playera Polo Sublimada #${num}`; pPrice = 220; imgUrl = `./assets/img/polo/playera${num}.png`; }
+        else if (categoriaSublimado === 'taza') { pName = `Taza Sublimada Diseño #${num}`; pPrice = 80; pSizes = ["Única (11 oz)"]; imgUrl = `./assets/img/tazas/taza${num}.png`; }
+        else if (categoriaSublimado === 'totebag') { pName = `Tote Bag Sublimada #${num}`; pPrice = 120; pSizes = ["Estándar"]; imgUrl = `./assets/img/totebags/totebag${num}.png`; }
+        else if (categoriaSublimado === 'gorra') { pName = `Gorra Sublimada Diseño #${num}`; pPrice = 150; pSizes = ["Ajustable"]; imgUrl = `./assets/img/gorras/gorra${num}.png`; }
+
+        product = {
+            id: rawId,
+            name: pName,
+            price: pPrice,
+            image: imgUrl,
+            gallery: [imgUrl],
+            sizes: pSizes,
+            colors: ["Por Diseño"]
+        };
+    } else {
+        const productId = parseInt(rawId) || 1;
+        product = products.find(p => p.id === productId) || products[0];
+    }
+
+    // Reiniciar posición del carrusel
     currentGalleryPosition = 0;
     stopGalleryAutoScroll();
 
-    // Cargar información inicial del producto
+    // Cargar información inicial
     document.getElementById('detail-img').src = product.image;
     document.getElementById('detail-img').alt = product.name;
     titleEl.innerText = product.name;
@@ -257,31 +294,31 @@ function renderProductDetailPage() {
     const grupoTipoPlayera = document.getElementById('grupo-tipo-playera');
     const elTipoPlayera = document.getElementById('tipo-playera');
 
-    // Identificar productos
-    const esPoliesterPolo = product.id === 6 || product.name.toLowerCase().includes("poliéster") || product.name.toLowerCase().includes("poliester");
-    const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || product.name.toLowerCase().includes("basico");
-    const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie");
+    // Identificar productos para mostrar menús
+    const esPoliesterPolo = product.id === 6 || product.name.toLowerCase().includes("poliéster") || categoriaSublimado === 'polo';
+    const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera';
+    const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie") || categoriaSublimado === 'hoodie';
     
     const requiereGenero = esPoliesterPolo || esBasica || esHoodie;
     const requiereTipoPlayera = esPoliesterPolo || esBasica; 
+
+    // Ocultar TOTALMENTE la selección de color si es sublimado
+    if (colorSelect && colorSelect.parentElement) {
+        if (esSublimado) {
+            colorSelect.parentElement.style.display = 'none';
+        } else {
+            colorSelect.parentElement.style.display = 'block';
+        }
+    }
 
     // 1. Mostrar/Ocultar "¿Para quién es la prenda?"
     if (grupoGenero && elGenero) {
         if (requiereGenero) {
             grupoGenero.style.display = 'block';
-
             if (esHoodie) {
-                elGenero.innerHTML = `
-                    <option value="">Selecciona una opción</option>
-                    <option value="Unisex">Unisex (Adulto)</option>
-                    <option value="Infantil">Infantil (Niño / Niña)</option>
-                `;
+                elGenero.innerHTML = `<option value="">Selecciona una opción</option><option value="Unisex">Unisex (Adulto)</option><option value="Infantil">Infantil (Niño / Niña)</option>`;
             } else {
-                elGenero.innerHTML = `
-                    <option value="">Selecciona una opción</option>
-                    <option value="Hombre">Hombre (Caballero)</option>
-                    <option value="Mujer">Mujer (Dama)</option>
-                `;
+                elGenero.innerHTML = `<option value="">Selecciona una opción</option><option value="Hombre">Hombre (Caballero)</option><option value="Mujer">Mujer (Dama)</option>`;
             }
         } else {
             grupoGenero.style.display = 'none';
@@ -297,19 +334,16 @@ function renderProductDetailPage() {
         }
     }
 
-    // Cargar tallas base
     function loadSizes() {
         if (!sizeSelect) return;
         let sizeList = Array.isArray(product.sizes) ? product.sizes : [product.sizes];
         sizeSelect.innerHTML = sizeList.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-    // Función para deshabilitar / habilitar selectores
     function updateFormState() {
         const selectedGen = elGenero ? elGenero.value : '';
 
         if (requiereGenero && !selectedGen) {
-            // ESTADO DESHABILITADO
             if (elTipoPlayera) {
                 elTipoPlayera.disabled = true;
                 elTipoPlayera.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
@@ -318,33 +352,22 @@ function renderProductDetailPage() {
                 sizeSelect.disabled = true;
                 sizeSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
             }
-            if (colorSelect) {
+            if (colorSelect && !esSublimado) {
                 colorSelect.disabled = true;
                 colorSelect.innerHTML = `<option value="">Primero selecciona para quién es la prenda</option>`;
             }
             
-            // Restaurar valores base si deselecciona
             if (esPoliesterPolo) updatePriceDisplay(product.price);
-            if (esBasica) document.getElementById('detail-img').src = product.image;
+            if (esBasica && !esSublimado) document.getElementById('detail-img').src = product.image;
             
         } else {
-            // ESTADO HABILITADO
             if (elTipoPlayera && requiereTipoPlayera) {
                 if (elTipoPlayera.disabled) {
                     elTipoPlayera.disabled = false;
-                    
                     if (esPoliesterPolo) {
-                        elTipoPlayera.innerHTML = `
-                            <option value="">Selecciona una opción</option>
-                            <option value="Playera Básica">Playera Básica</option>
-                            <option value="Playera Tipo Polo">Playera Tipo Polo</option>
-                        `;
+                        elTipoPlayera.innerHTML = `<option value="">Selecciona una opción</option><option value="Playera Básica">Playera Básica</option><option value="Playera Tipo Polo">Playera Tipo Polo</option>`;
                     } else if (esBasica) {
-                        elTipoPlayera.innerHTML = `
-                            <option value="" disabled selected>Selecciona una opción</option>
-                            <option value="Playera Básica">Playera Básica</option>
-                            <option value="Tipo Polo">Tipo Polo</option>
-                        `;
+                        elTipoPlayera.innerHTML = `<option value="" disabled selected>Selecciona una opción</option><option value="Normal (Cuello Redondo)">Normal (Cuello Redondo)</option><option value="Tipo Polo">Tipo Polo</option>`;
                     }
                 }
             }
@@ -354,65 +377,36 @@ function renderProductDetailPage() {
                 loadSizes();
             }
 
-            if (colorSelect) {
+            if (colorSelect && !esSublimado) {
                 colorSelect.disabled = false;
                 let availableColors = [];
-                if (esPoliesterPolo && colorMap.polo && colorMap.polo[selectedGen]) {
-                    availableColors = colorMap.polo[selectedGen];
-                } else if (esBasica && colorMap.basica && colorMap.basica[selectedGen]) {
-                    availableColors = colorMap.basica[selectedGen];
-                } else if (esHoodie && colorMap.hoodie && colorMap.hoodie[selectedGen]) {
-                    availableColors = colorMap.hoodie[selectedGen];
-                } else {
-                    if (Array.isArray(product.colors)) {
-                        availableColors = product.colors;
-                    } else if (typeof product.colors === 'string') {
-                        availableColors = product.colors.split(',').map(c => c.trim());
-                    } else {
-                        availableColors = ["Estándar"];
-                    }
-                }
+                if (esPoliesterPolo && colorMap.polo && colorMap.polo[selectedGen]) availableColors = colorMap.polo[selectedGen];
+                else if (esBasica && colorMap.basica && colorMap.basica[selectedGen]) availableColors = colorMap.basica[selectedGen];
+                else if (esHoodie && colorMap.hoodie && colorMap.hoodie[selectedGen]) availableColors = colorMap.hoodie[selectedGen];
+                else availableColors = Array.isArray(product.colors) ? product.colors : ["Estándar"];
                 colorSelect.innerHTML = availableColors.map(c => `<option value="${c}">${c}</option>`).join('');
             }
         }
     }
 
     updateFormState();
+    if (elGenero) elGenero.onchange = () => updateFormState();
 
-    if (elGenero) {
-        elGenero.onchange = () => {
-            updateFormState();
-        };
-    }
-
-    // --- SEPARACIÓN DE LÓGICAS: PRECIO PARA POLIÉSTER, IMAGEN PARA BÁSICA ---
     if (elTipoPlayera) {
         elTipoPlayera.onchange = () => {
             const val = elTipoPlayera.value;
-
-            // Lógica 1: Solo cambia precios en Playera de Poliéster
             if (esPoliesterPolo) {
-                if (val === "Playera Básica") {
-                    updatePriceDisplay(200);
-                } else if (val === "Playera Tipo Polo" || val === "Tipo Polo") {
-                    updatePriceDisplay(300);
-                } else {
-                    updatePriceDisplay(product.price);
-                }
+                if (val === "Playera Básica") updatePriceDisplay(200);
+                else if (val === "Playera Tipo Polo" || val === "Tipo Polo") updatePriceDisplay(300);
+                else updatePriceDisplay(product.price);
             }
-
-            // Lógica 2: Solo cambia imagen en Playera Básica (usando playera10.png)
-            if (esBasica) {
-                if (val === "Tipo Polo") {
-                    document.getElementById('detail-img').src = './assets/img/polo/playera10.png';
-                } else {
-                    document.getElementById('detail-img').src = product.image; // Vuelve a su imagen base
-                }
+            if (esBasica && !esSublimado) {
+                if (val === "Tipo Polo") document.getElementById('detail-img').src = './assets/img/polo/playera10.png';
+                else document.getElementById('detail-img').src = product.image; 
             }
         };
     }
 
-    // Carrusel de la galería
     const track = document.getElementById('gallery-carousel-track');
     if (track && product.gallery) {
         track.innerHTML = '';
@@ -431,47 +425,33 @@ function renderProductDetailPage() {
         }
     }
 
-    // Botón agregar al carrito
     const addBtn = document.getElementById('add-to-cart-detail-btn');
     if (addBtn) {
         const newAddBtn = addBtn.cloneNode(true);
         addBtn.parentNode.replaceChild(newAddBtn, addBtn);
-        
         newAddBtn.addEventListener('click', () => {
             let generoSeleccionado = '';
             if (elGenero && requiereGenero) {
                 generoSeleccionado = elGenero.value;
-                if (!generoSeleccionado) {
-                    showToast("⚠️ Por favor selecciona para quién es la prenda.");
-                    return;
-                }
+                if (!generoSeleccionado) return showToast("⚠️ Por favor selecciona para quién es la prenda.");
             }
-
             let tipoSeleccionado = '';
             if (requiereTipoPlayera && elTipoPlayera) {
                 tipoSeleccionado = elTipoPlayera.value;
-                if (!tipoSeleccionado || elTipoPlayera.disabled) {
-                    showToast("⚠️ Por favor selecciona el tipo de playera.");
-                    return;
-                }
+                if (!tipoSeleccionado || elTipoPlayera.disabled) return showToast("⚠️ Por favor selecciona el tipo de playera.");
             }
-
             const selectedSize = sizeSelect ? sizeSelect.value : 'Única';
-            const selectedColor = colorSelect ? colorSelect.value : 'Estándar';
+            
+            // Si es sublimado forzamos el color a "Predeterminado"
+            const selectedColor = esSublimado ? 'Predeterminado' : (colorSelect ? colorSelect.value : 'Estándar');
 
-            if (!selectedSize || sizeSelect.disabled) {
-                showToast("⚠️ Por favor selecciona la talla.");
-                return;
-            }
-            if (!selectedColor || colorSelect.disabled) {
-                showToast("⚠️ Por favor selecciona el color.");
-                return;
-            }
+            if (!selectedSize || sizeSelect.disabled) return showToast("⚠️ Por favor selecciona la talla.");
+            if (!selectedColor && !esSublimado) return showToast("⚠️ Por favor selecciona el color.");
 
             const customInput = document.getElementById('detail-custom');
             const customText = customInput && customInput.value.trim() ? customInput.value.trim() : "Sin detalle especificado";
 
-            const productoParaCarrito = {
+            cart.push({
                 cartId: Date.now(),
                 name: product.name + (tipoSeleccionado ? ` (${tipoSeleccionado})` : ''),
                 price: currentPrice,
@@ -480,9 +460,7 @@ function renderProductDetailPage() {
                 custom: customText,
                 ...(generoSeleccionado && { genero: generoSeleccionado }),
                 ...(tipoSeleccionado && { tipoPlayera: tipoSeleccionado })
-            };
-
-            cart.push(productoParaCarrito);
+            });
             saveCart();
             showToast(`¡${product.name} agregado al carrito! ✨`);
         });

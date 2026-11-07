@@ -156,8 +156,8 @@ function mostrarSublimados(lista) {
                 <h3 class="sub-title">${item.nombre}</h3>
                 <p class="sub-price">$${item.precio} MXN</p>
                 <div class="sub-actions">
-                    <button type="button" class="btn-custom-sub btn-add" onclick="abrirPersonalizador('${item.id}')">
-                        Personalizar y Agregar
+                   <button type="button" class="btn-custom-sub btn-add" onclick="window.location.href='producto.html?id=${item.id}'">
+                        Personalizar 🎨
                     </button>
                 </div>
             </div>
