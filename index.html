@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="assets/css/navidad.css">
     <style>
     @media (max-width: 768px) {
-        /* 1. Forzar que el contenedor del banner no cree espacio vacío */
-        .hero, .banner, .slider, .carousel, .swiper, [class*="carousel"], [class*="slider"] {
+        .banner-carousel {
             height: auto !important;
             min-height: unset !important;
             padding-top: 0 !important;
@@ -23,8 +22,16 @@
             margin-bottom: 10px !important;
         }
 
-        /* 2. Ajustar la imagen del banner para que no deje margen */
-        .hero img, .banner img, .slider img, .carousel img, [class*="carousel"] img {
+        .banner-carousel .carousel-track-container,
+        .banner-carousel .carousel-track,
+        .banner-carousel .carousel-slide {
+            height: auto !important;
+            min-height: unset !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        .banner-carousel img {
             height: auto !important;
             max-height: 220px !important;
             object-fit: contain !important;
@@ -32,15 +39,13 @@
             display: block !important;
         }
 
-        /* 3. Reducir y ocultar o reposicionar las flechas en móvil para ganar espacio */
-        .prev, .next, .swiper-button-prev, .swiper-button-next, [class*="arrow"], [class*="btn-prev"], [class*="btn-next"] {
+        .carousel-arrow {
             width: 30px !important;
             height: 30px !important;
             margin: 5px !important;
             padding: 0 !important;
         }
 
-        /* 4. Compactar la tipografía y espacio del título inferior */
         body h1, body h2, body .title {
             font-size: 1.3rem !important;
             margin-top: 10px !important;
@@ -107,12 +112,13 @@
                         <img src="assets/img/carrusel3.png" alt="Anticipo 50%">
                     </li>
                     <li class="carousel-slide"> 
-                        <img src="assets/img/carrusel4.png">
+                        <img src="assets/img/carrusel4.png" alt="Diseños personalizados CROMA Project">
                     </li>
                 </ul>
             </div>
-            <button class="carousel-arrow prev" onclick="moveSlide(-1)">&#10094;</button>
-            <button class="carousel-arrow next" onclick="moveSlide(1)">&#10095;</button>
+            <button class="carousel-arrow prev" type="button" aria-label="Imagen anterior" onclick="moveSlide(-1)">&#10094;</button>
+            <button class="carousel-arrow next" type="button" aria-label="Imagen siguiente" onclick="moveSlide(1)">&#10095;</button>
+            <div class="carousel-pagination" id="carousel-pagination" aria-label="Paginación del carrusel"></div>
         </section>
 
         <!-- BANNER DE FRASE PROMOCIONAL ALARGADO -->
@@ -186,7 +192,6 @@
         <p style="margin: 0 0 12px 0; font-size: 0.85rem; opacity: 0.8;">© 2026 Todos los derechos reservados.</p>
         <p style="margin: 0 0 12px 0; font-size: 0.85rem; opacity: 0.8;">Proyecto realizado por Soluciones T0TA1 tics</p>
         <p style="margin: 0 0 12px 0; font-size: 0.85rem; opacity: 0.8;">Contacto 322 139 5546 </p>
-        <!-- Enlaces Legales -->
         <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.85rem;">
             <a href="aviso-de-privacidad.html" style="color: #ffffff; text-decoration: underline; opacity: 0.9; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">Aviso de Privacidad</a>
             <span style="opacity: 0.5;">|</span>

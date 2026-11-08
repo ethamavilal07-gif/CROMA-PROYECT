@@ -409,47 +409,7 @@ function renderProductDetailPage() {
         };
     }
 
-    // --- CARRUSEL 100% ALEATORIO Y CORREGIDO ---
-    // Reiniciamos posición y detenemos el scroll inmediatamente
-    currentGalleryPosition = 0;
-    stopGalleryAutoScroll();
-
-    const track = document.getElementById('gallery-carousel-track');
-    if (track) {
-        track.innerHTML = '';
-        track.style.transform = `translateX(0px)`;
-        
-        // Juntar TODAS las imágenes del catálogo principal
-        let todasLasImagenes = [];
-        products.forEach(p => {
-            if (p.gallery) {
-                todasLasImagenes.push(...p.gallery);
-            }
-        });
-        
-        // Mezclarlas completamente al azar
-        for (let i = todasLasImagenes.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [todasLasImagenes[i], todasLasImagenes[j]] = [todasLasImagenes[j], todasLasImagenes[i]];
-        }
-        
-        // Seleccionar 15 fotos para mostrar
-        const galeriaAleatoria = todasLasImagenes.slice(0, 15);
-        
-        galeriaAleatoria.forEach(imgUrl => {
-            const item = document.createElement('div');
-            item.style = "min-width: 180px; height: 180px; background: #fff; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.06); padding: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;";
-            item.innerHTML = `<img src="${imgUrl}" alt="Muestra de trabajo" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
-            track.appendChild(item);
-        });
-        
-        startGalleryAutoScroll();
-        const wrapper = document.querySelector('.gallery-carousel-wrapper');
-        if (wrapper) {
-            wrapper.onmouseenter = stopGalleryAutoScroll;
-            wrapper.onmouseleave = startGalleryAutoScroll;
-        }
-    }
+    initializeGalleryCarousel();
 
     // Botón Agregar al Carrito
     const addBtn = document.getElementById('add-to-cart-detail-btn');
@@ -495,42 +455,102 @@ function renderProductDetailPage() {
 
 // LÓGICA DEL CARRUSEL AUTOMÁTICO EN LOOP INFINITO (MUESTRAS)
 function moveGallerySlide(direction) {
-   // Carrusel de la galería (AHORA CON IMÁGENES ALEATORIAS DE TODA LA TIENDA)
     const track = document.getElementById('gallery-carousel-track');
-    if (track) {
-        track.innerHTML = '';
-        track.style.transform = `translateX(0px)`;
-        
-        // 1. Juntar todas las imágenes de todos los productos en una sola lista
-        let todasLasImagenes = [];
-        products.forEach(p => {
-            if (p.gallery) {
-                todasLasImagenes = todasLasImagenes.concat(p.gallery);
-            }
-        });
-        
-        // 2. Mezclar las imágenes al azar
-        for (let i = todasLasImagenes.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [todasLasImagenes[i], todasLasImagenes[j]] = [todasLasImagenes[j], todasLasImagenes[i]];
+    if (!track) return;
+
+    const slideCount = track.querySelectorAll('.gallery-carousel-slide:not(.gallery-carousel-clone)').length;
+    if (slideCount < 2) return;
+
+    currentGalleryPosition += direction < 0 ? -1 : 1;
+    updateGalleryCarouselPosition();
+}
+
+function initializeGalleryCarousel() {
+    const track = document.getElementById('gallery-carousel-track');
+    if (!track) return;
+
+    stopGalleryAutoScroll();
+    currentGalleryPosition = 0;
+    track.innerHTML = '';
+
+    const images = products.flatMap(product => product.gallery || []);
+    for (let index = images.length - 1; index > 0; index--) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [images[index], images[randomIndex]] = [images[randomIndex], images[index]];
+    }
+
+    images.slice(0, 15).forEach(imageUrl => {
+        const item = document.createElement('div');
+        item.className = 'gallery-carousel-slide';
+        item.style = "min-width: 180px; height: 180px; background: #fff; border-radius: 8px; border: 1px solid #eee; padding: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;";
+
+        const image = document.createElement('img');
+        image.src = imageUrl;
+        image.alt = 'Muestra de trabajo';
+        image.style = 'max-width: 100%; max-height: 100%; object-fit: contain;';
+        item.appendChild(image);
+        track.appendChild(item);
+    });
+
+    const originalSlides = Array.from(track.querySelectorAll('.gallery-carousel-slide'));
+    if (originalSlides.length > 1) {
+        const firstClone = originalSlides[0].cloneNode(true);
+        const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+        firstClone.classList.add('gallery-carousel-clone');
+        lastClone.classList.add('gallery-carousel-clone');
+        track.appendChild(firstClone);
+        track.insertBefore(lastClone, track.firstChild);
+        currentGalleryPosition = 1;
+    }
+
+    track.ontransitionend = (event) => {
+        if (event.target !== track || event.propertyName !== 'transform') return;
+
+        const slideCount = track.querySelectorAll('.gallery-carousel-slide:not(.gallery-carousel-clone)').length;
+        if (currentGalleryPosition === 0) {
+            currentGalleryPosition = slideCount;
+            updateGalleryCarouselPosition(false);
+        } else if (currentGalleryPosition === slideCount + 1) {
+            currentGalleryPosition = 1;
+            updateGalleryCarouselPosition(false);
         }
-        
-        // 3. Tomar 15 imágenes aleatorias (para que la página cargue rápido y no se sature)
-        const galeriaAleatoria = todasLasImagenes.slice(0, 15);
-        
-        galeriaAleatoria.forEach(imgUrl => {
-            const item = document.createElement('div');
-            item.style = "min-width: 180px; height: 180px; background: #fff; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.06); padding: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;";
-            item.innerHTML = `<img src="${imgUrl}" alt="Muestra de trabajo" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
-            track.appendChild(item);
-        });
-        
-        startGalleryAutoScroll();
-        const wrapper = document.querySelector('.gallery-carousel-wrapper');
-        if (wrapper) {
-            wrapper.onmouseenter = stopGalleryAutoScroll;
-            wrapper.onmouseleave = startGalleryAutoScroll;
-        }
+    };
+
+    updateGalleryCarouselPosition(false);
+    startGalleryAutoScroll();
+
+    const wrapper = document.querySelector('.gallery-carousel-wrapper');
+    if (wrapper) {
+        wrapper.onmouseenter = stopGalleryAutoScroll;
+        wrapper.onmouseleave = startGalleryAutoScroll;
+    }
+
+    window.addEventListener('resize', () => updateGalleryCarouselPosition(false));
+}
+
+function updateGalleryCarouselPosition(animate = true) {
+    const track = document.getElementById('gallery-carousel-track');
+    if (!track) return;
+
+    const slides = Array.from(track.querySelectorAll('.gallery-carousel-slide'));
+    const activeSlide = slides[currentGalleryPosition];
+    const wrapper = track.parentElement;
+    if (!activeSlide || !wrapper) return;
+
+    if (!animate) track.style.transition = 'none';
+    const slideCenter = activeSlide.offsetLeft + activeSlide.offsetWidth / 2;
+    const trackOffset = track.offsetLeft;
+    const wrapperCenter = wrapper.clientWidth / 2;
+    track.style.transform = `translateX(${wrapperCenter - trackOffset - slideCenter}px)`;
+
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('is-active', index === currentGalleryPosition);
+        slide.classList.toggle('is-nearby', Math.abs(index - currentGalleryPosition) === 1);
+    });
+
+    if (!animate) {
+        track.offsetHeight;
+        track.style.transition = '';
     }
 }
 
@@ -550,34 +570,76 @@ function stopGalleryAutoScroll() {
 
 // LÓGICA DEL CARRUSEL PRINCIPAL (index.html) - CORREGIDO
 let heroCurrentSlide = 0;
+let heroPhysicalSlide = 1;
 let heroTimer = null;
 
 function moveSlide(direction) {
     const track = document.getElementById('carousel-track');
     if (!track) return;
 
+    const slides = track.querySelectorAll('.carousel-slide:not(.carousel-slide-clone)');
+    if (slides.length < 2) return;
+
+    const nextSlide = heroCurrentSlide + direction;
+    const slideCount = slides.length;
+    const physicalSlide = nextSlide < 0
+        ? 0
+        : nextSlide >= slideCount
+            ? slideCount + 1
+            : nextSlide + 1;
+
+    updateHeroCarousel(
+        (nextSlide + slideCount) % slideCount,
+        physicalSlide
+    );
+}
+
+function updateHeroCarousel(index, physicalIndex, animate = true) {
+    const track = document.getElementById('carousel-track');
+    const container = track ? track.parentElement : null;
+    if (!track || !container) return;
+
     const slides = track.querySelectorAll('.carousel-slide');
     if (slides.length === 0) return;
 
-    // Calcular la dirección
-    heroCurrentSlide += direction;
+    heroCurrentSlide = index;
+    heroPhysicalSlide = physicalIndex;
+    if (!animate) track.style.transition = 'none';
 
-    if (heroCurrentSlide >= slides.length) {
-        heroCurrentSlide = 0;
-    } else if (heroCurrentSlide < 0) {
-        heroCurrentSlide = slides.length - 1;
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('current-slide', index === heroPhysicalSlide);
+        slide.classList.toggle('is-nearby', Math.abs(index - heroPhysicalSlide) === 1);
+    });
+
+    const activeSlide = slides[heroPhysicalSlide];
+    const slideCenter = activeSlide.offsetLeft + activeSlide.offsetWidth / 2;
+    const containerCenter = container.clientWidth / 2;
+    track.style.transform = `translateX(${containerCenter - slideCenter}px)`;
+    if (!animate) {
+        track.offsetHeight;
+        track.style.transition = '';
     }
 
-    // Obtener el ancho exacto del contenedor contenedor visible
-    const slideWidth = slides[0].getBoundingClientRect().width;
-    
-    // Mover la pista en píxeles exactos
-    track.style.transform = `translateX(-${heroCurrentSlide * slideWidth}px)`;
+    const pagination = document.getElementById('carousel-pagination');
+    if (pagination) {
+        pagination.querySelectorAll('button').forEach((button, buttonIndex) => {
+            const isActive = buttonIndex === heroCurrentSlide;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-current', isActive ? 'true' : 'false');
+        });
+    }
+}
 
-    // Actualizar clases
-    slides.forEach((slide, index) => {
-        slide.classList.toggle('current-slide', index === heroCurrentSlide);
-    });
+function setHeroSlide(index, animate = true) {
+    const track = document.getElementById('carousel-track');
+    if (!track) return;
+
+    const slides = track.querySelectorAll('.carousel-slide:not(.carousel-slide-clone)');
+    if (slides.length === 0) return;
+
+    const slideIndex = (index + slides.length) % slides.length;
+    const physicalIndex = track.querySelector('.carousel-slide-clone') ? slideIndex + 1 : slideIndex;
+    updateHeroCarousel(slideIndex, physicalIndex, animate);
 }
 
 function startHeroAutoScroll() {
@@ -598,9 +660,50 @@ function initHeroCarousel() {
     const track = document.getElementById('carousel-track');
     if (!track) return;
 
-    heroCurrentSlide = 0;
-    track.style.transform = 'translateX(0px)';
-    
+    const originalSlides = Array.from(track.querySelectorAll('.carousel-slide'));
+    if (originalSlides.length > 1) {
+        const firstClone = originalSlides[0].cloneNode(true);
+        const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+        firstClone.classList.add('carousel-slide-clone');
+        lastClone.classList.add('carousel-slide-clone');
+        firstClone.classList.remove('current-slide');
+        lastClone.classList.remove('current-slide');
+        firstClone.setAttribute('aria-hidden', 'true');
+        lastClone.setAttribute('aria-hidden', 'true');
+        track.appendChild(firstClone);
+        track.insertBefore(lastClone, track.firstChild);
+    }
+
+    const slides = track.querySelectorAll('.carousel-slide:not(.carousel-slide-clone)');
+    const pagination = document.getElementById('carousel-pagination');
+
+    if (pagination) {
+        pagination.innerHTML = '';
+        slides.forEach((_, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.setAttribute('aria-label', `Mostrar diapositiva ${index + 1}`);
+            button.addEventListener('click', () => {
+                setHeroSlide(index);
+                startHeroAutoScroll();
+            });
+            pagination.appendChild(button);
+        });
+    }
+
+    track.addEventListener('transitionend', (event) => {
+        if (event.target !== track || event.propertyName !== 'transform') return;
+
+        const slideCount = track.querySelectorAll('.carousel-slide:not(.carousel-slide-clone)').length;
+        if (heroPhysicalSlide === 0) {
+            updateHeroCarousel(heroCurrentSlide, slideCount, false);
+        } else if (heroPhysicalSlide === slideCount + 1) {
+            updateHeroCarousel(heroCurrentSlide, 1, false);
+        }
+    });
+
+    setHeroSlide(0, false);
+
     // Iniciar auto-scroll
     startHeroAutoScroll();
 
@@ -612,7 +715,7 @@ function initHeroCarousel() {
     }
 
     // Ajustar si la ventana cambia de tamaño
-    window.addEventListener('resize', () => moveSlide(0));
+    window.addEventListener('resize', () => setHeroSlide(heroCurrentSlide, false));
 }
 // BÚSQUEDA INTELIGENTE CON SINÓNIMOS Y ERRORES COMUNES
 function filterProducts() {

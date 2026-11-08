@@ -1,4 +1,4 @@
-/* CARRUSEL HORIZONTAL A PANTALLA COMPLETA */
+/* CARRUSELES */
 .banner-carousel {
     position: relative;
     width: 100vw;
@@ -12,6 +12,7 @@
 .carousel-track-container {
     width: 100%;
     max-width: 1200px; /* Ancho máximo para que no se estire infinito en pantallas grandes */
+    height: 100%;
     margin: 0 auto;
     overflow: hidden;
     position: relative;
@@ -19,6 +20,10 @@
 
 .carousel-track {
     display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: clamp(18px, 3vw, 40px);
     transition: transform 0.5s ease-in-out;
     padding: 0;
     margin: 0;
@@ -26,19 +31,45 @@
 }
 
 .carousel-slide {
-    min-width: 100%;
+    flex: 0 0 72%;
+    min-width: 0;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: 0.55;
+    transform: scale(0.82);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1;
 }
 
 .carousel-slide img {
     width: 100%;
     height: auto;
-    max-height: 480px; /* Controla la altura máxima para que no ocupe toda la pantalla */
-    object-fit: contain; 
+    max-height: 480px;
+    object-fit: contain;
     display: block;
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0 14px 36px rgba(58, 30, 35, 0.16);
+}
+
+.carousel-slide.current-slide {
+    opacity: 1;
+    transform: scale(1.05);
+    z-index: 3;
+}
+
+.carousel-slide.is-nearby {
+    opacity: 0.82;
+    transform: scale(0.9);
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .carousel-slide {
+        flex-basis: 90%;
+    }
 }
 
 .carousel-arrow {
@@ -58,6 +89,12 @@
     transition: all 0.3s ease;
 }
 
+.carousel-arrow:focus-visible,
+.carousel-pagination button:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
 .carousel-arrow:hover {
     background: var(--primary-color);
     color: #FFF;
@@ -65,6 +102,68 @@
 
 .carousel-arrow.prev { left: 25px; }
 .carousel-arrow.next { right: 25px; }
+
+.carousel-pagination {
+    position: absolute;
+    right: 0;
+    bottom: 14px;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+}
+
+.carousel-pagination button {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(107, 29, 47, 0.3);
+    cursor: pointer;
+    transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.carousel-pagination button.is-active {
+    width: 25px;
+    border-radius: 8px;
+    background: var(--primary-color);
+}
+
+.gallery-carousel-track {
+    position: relative;
+    align-items: center;
+    will-change: transform;
+    transition: transform 0.4s ease-in-out;
+}
+
+.gallery-carousel-slide {
+    opacity: 0.72;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    position: relative;
+    z-index: 1;
+    transform: scale(0.82);
+    transition: opacity 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.gallery-carousel-slide.is-active {
+    opacity: 1;
+    box-shadow: 0 5px 16px rgba(107, 29, 47, 0.22);
+    transform: scale(1);
+    z-index: 3;
+}
+
+.gallery-carousel-slide.is-nearby {
+    opacity: 0.85;
+    transform: scale(0.9);
+    z-index: 2;
+}
+
+.gallery-carousel-wrapper button:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 3px;
+}
 
 /* BANNER DE FRASE PROMOCIONAL */
 .quote-banner {
