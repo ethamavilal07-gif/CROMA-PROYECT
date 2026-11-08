@@ -265,10 +265,6 @@ function renderProductDetailPage() {
         product = products.find(p => p.id === productId) || products[0];
     }
 
-    // Reiniciar posición del carrusel
-    currentGalleryPosition = 0;
-    stopGalleryAutoScroll();
-
     // Cargar información inicial
     document.getElementById('detail-img').src = product.image;
     document.getElementById('detail-img').alt = product.name;
@@ -299,7 +295,7 @@ function renderProductDetailPage() {
     const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera';
     const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie") || categoriaSublimado === 'hoodie';
     
-    // NUEVA LÓGICA: Identificar si es Taza, Gorra o Tote Bag (Productos sin talla ni color configurable)
+    // Identificar si es Accesorio (Productos sin talla ni color configurable)
     const esAccesorios = product.id === 3 || product.id === 4 || product.id === 5 || ['taza', 'gorra', 'totebag'].includes(categoriaSublimado);
 
     const requiereGenero = esPoliesterPolo || esBasica || esHoodie;
@@ -413,16 +409,40 @@ function renderProductDetailPage() {
         };
     }
 
+    // --- CARRUSEL 100% ALEATORIO Y CORREGIDO ---
+    // Reiniciamos posición y detenemos el scroll inmediatamente
+    currentGalleryPosition = 0;
+    stopGalleryAutoScroll();
+
     const track = document.getElementById('gallery-carousel-track');
-    if (track && product.gallery) {
+    if (track) {
         track.innerHTML = '';
         track.style.transform = `translateX(0px)`;
-        product.gallery.forEach(imgUrl => {
+        
+        // Juntar TODAS las imágenes del catálogo principal
+        let todasLasImagenes = [];
+        products.forEach(p => {
+            if (p.gallery) {
+                todasLasImagenes.push(...p.gallery);
+            }
+        });
+        
+        // Mezclarlas completamente al azar
+        for (let i = todasLasImagenes.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [todasLasImagenes[i], todasLasImagenes[j]] = [todasLasImagenes[j], todasLasImagenes[i]];
+        }
+        
+        // Seleccionar 15 fotos para mostrar
+        const galeriaAleatoria = todasLasImagenes.slice(0, 15);
+        
+        galeriaAleatoria.forEach(imgUrl => {
             const item = document.createElement('div');
             item.style = "min-width: 180px; height: 180px; background: #fff; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.06); padding: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;";
-            item.innerHTML = `<img src="${imgUrl}" alt="Ejemplo sublimado" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+            item.innerHTML = `<img src="${imgUrl}" alt="Muestra de trabajo" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
             track.appendChild(item);
         });
+        
         startGalleryAutoScroll();
         const wrapper = document.querySelector('.gallery-carousel-wrapper');
         if (wrapper) {
@@ -431,6 +451,7 @@ function renderProductDetailPage() {
         }
     }
 
+    // Botón Agregar al Carrito
     const addBtn = document.getElementById('add-to-cart-detail-btn');
     if (addBtn) {
         const newAddBtn = addBtn.cloneNode(true);
@@ -447,7 +468,6 @@ function renderProductDetailPage() {
                 if (!tipoSeleccionado || elTipoPlayera.disabled) return showToast("⚠️ Por favor selecciona el tipo de playera.");
             }
             
-            // Asignar valores por defecto a accesorios para que se guarden bien en el carrito sin bloquear
             const selectedSize = esAccesorios ? product.sizes[0] : (sizeSelect ? sizeSelect.value : 'Única');
             const selectedColor = (esSublimado || esAccesorios) ? 'Predeterminado' : (colorSelect ? colorSelect.value : 'Estándar');
 
@@ -475,23 +495,43 @@ function renderProductDetailPage() {
 
 // LÓGICA DEL CARRUSEL AUTOMÁTICO EN LOOP INFINITO (MUESTRAS)
 function moveGallerySlide(direction) {
+   // Carrusel de la galería (AHORA CON IMÁGENES ALEATORIAS DE TODA LA TIENDA)
     const track = document.getElementById('gallery-carousel-track');
-    if (!track) return;
-
-    const step = 200;
-    const maxScroll = track.scrollWidth - track.clientWidth;
-
-    if (maxScroll <= 0) return;
-
-    currentGalleryPosition += direction * step;
-
-    if (currentGalleryPosition > maxScroll) {
-        currentGalleryPosition = 0;
-    } else if (currentGalleryPosition < 0) {
-        currentGalleryPosition = maxScroll;
+    if (track) {
+        track.innerHTML = '';
+        track.style.transform = `translateX(0px)`;
+        
+        // 1. Juntar todas las imágenes de todos los productos en una sola lista
+        let todasLasImagenes = [];
+        products.forEach(p => {
+            if (p.gallery) {
+                todasLasImagenes = todasLasImagenes.concat(p.gallery);
+            }
+        });
+        
+        // 2. Mezclar las imágenes al azar
+        for (let i = todasLasImagenes.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [todasLasImagenes[i], todasLasImagenes[j]] = [todasLasImagenes[j], todasLasImagenes[i]];
+        }
+        
+        // 3. Tomar 15 imágenes aleatorias (para que la página cargue rápido y no se sature)
+        const galeriaAleatoria = todasLasImagenes.slice(0, 15);
+        
+        galeriaAleatoria.forEach(imgUrl => {
+            const item = document.createElement('div');
+            item.style = "min-width: 180px; height: 180px; background: #fff; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.06); padding: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;";
+            item.innerHTML = `<img src="${imgUrl}" alt="Muestra de trabajo" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+            track.appendChild(item);
+        });
+        
+        startGalleryAutoScroll();
+        const wrapper = document.querySelector('.gallery-carousel-wrapper');
+        if (wrapper) {
+            wrapper.onmouseenter = stopGalleryAutoScroll;
+            wrapper.onmouseleave = startGalleryAutoScroll;
+        }
     }
-
-    track.style.transform = `translateX(-${currentGalleryPosition}px)`;
 }
 
 function startGalleryAutoScroll() {
