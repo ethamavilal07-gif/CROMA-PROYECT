@@ -231,25 +231,53 @@ function renderProductDetailPage() {
     let esSublimado = false;
     let categoriaSublimado = '';
 
-    // Detectar si el producto es del catálogo nuevo (ej. "sub-playera-1")
+    // Detectar si es un producto del catálogo de sublimados (empieza con "sub-")
     if (typeof rawId === 'string' && rawId.startsWith('sub-')) {
         esSublimado = true;
+        
         const partes = rawId.split('-');
-        categoriaSublimado = partes[1];
-        const num = partes[2];
+        const cat = partes[1]; // ej. 'parejas', 'playera', 'hoodie', etc.
+        const num = partes[2] || partes[partes.length - 1]; // el número del diseño
 
-        // Construir datos temporales para que la página funcione
         let pName = "Producto Sublimado";
         let pPrice = 180;
         let pSizes = ["CH", "M", "G", "XG", "2XG"];
         let imgUrl = `./assets/img/playeras/playera${num}.png`;
 
-        if (categoriaSublimado === 'playera') { pName = `Playera Sublimada Diseño #${num}`; pPrice = 180; imgUrl = `./assets/img/playeras/playera${num}.png`; }
-        else if (categoriaSublimado === 'hoodie') { pName = `Hoodie Sublimada Diseño #${num}`; pPrice = 450; pSizes = ["CH", "M", "G", "XG"]; imgUrl = `./assets/img/hoodies/hoodie${num}.png`; }
-        else if (categoriaSublimado === 'polo') { pName = `Playera Polo Sublimada #${num}`; pPrice = 220; imgUrl = `./assets/img/polo/playera${num}.png`; }
-        else if (categoriaSublimado === 'taza') { pName = `Taza Sublimada Diseño #${num}`; pPrice = 80; pSizes = ["Única (11 oz)"]; imgUrl = `./assets/img/tazas/taza${num}.png`; }
-        else if (categoriaSublimado === 'totebag') { pName = `Tote Bag Sublimada #${num}`; pPrice = 120; pSizes = ["Estándar"]; imgUrl = `./assets/img/totebags/totebag${num}.png`; }
-        else if (categoriaSublimado === 'gorra') { pName = `Gorra Sublimada Diseño #${num}`; pPrice = 150; pSizes = ["Ajustable"]; imgUrl = `./assets/img/gorras/gorra${num}.png`; }
+        // Asignar nombre, precio y ruta exacta según la categoría del ID
+        if (cat === 'parejas' || cat === 'pareja') {
+            pName = `Playera para parejas Diseño ${num}`;
+            pPrice = 180;
+            imgUrl = `./assets/img/playeras/parejas/ppromo${num}.png`;
+        } else if (cat === 'playera' || cat === 'nuevo') {
+            pName = `Playera Sublimada Diseño #${num}`;
+            pPrice = 180;
+            imgUrl = `./assets/img/playeras/playera${num}.png`;
+        } else if (cat === 'hoodie') {
+            pName = `Hoodie Sublimada Diseño #${num}`;
+            pPrice = 450;
+            pSizes = ["CH", "M", "G", "XG"];
+            imgUrl = `./assets/img/hoodies/hoodie${num}.png`;
+        } else if (cat === 'polo') {
+            pName = `Playera Polo Sublimada #${num}`;
+            pPrice = 220;
+            imgUrl = `./assets/img/polo/playera${num}.png`;
+        } else if (cat === 'taza') {
+            pName = `Taza Sublimada Diseño #${num}`;
+            pPrice = 80;
+            pSizes = ["Única (11 oz)"];
+            imgUrl = `./assets/img/tazas/taza${num}.png`;
+        } else if (cat === 'totebag') {
+            pName = `Tote Bag Sublimada #${num}`;
+            pPrice = 120;
+            pSizes = ["Estándar"];
+            imgUrl = `./assets/img/totebags/totebag${num}.png`;
+        } else if (cat === 'gorra') {
+            pName = `Gorra Sublimada #${num}`;
+            pPrice = 150;
+            pSizes = ["Ajustable"];
+            imgUrl = `./assets/img/gorras/gorra${num}.png`;
+        }
 
         product = {
             id: rawId,
@@ -261,6 +289,7 @@ function renderProductDetailPage() {
             colors: ["Por Diseño"]
         };
     } else {
+        // Si es un producto del catálogo general normal (IDs numéricos: 1, 2, 3...)
         const productId = parseInt(rawId) || 1;
         product = products.find(p => p.id === productId) || products[0];
     }

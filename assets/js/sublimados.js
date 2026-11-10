@@ -3,6 +3,81 @@
  */
 
 const catalogoSublimados = [];
+/* EJEMPLO DE CÓMO AGREGAR UN PRODUCTO NUEVO QUE PERTENECE A DOS CATEGORÍAS:
+catalogoSublimados.push(
+    {
+        id: `sub-nuevo-1`,
+        nombre: `Playera Edición Especial Navidad`,
+        categoria: ['nuevo', 'playeras'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 180,
+        usaTalla: true,
+        esPrenda: true,
+        img: `./assets/img/playeras/playera1.png`
+    },
+    {
+        id: `sub-nuevo-2`,
+        nombre: `Hoodie Invierno`,
+        categoria: ['nuevo', 'hoodies'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 450,
+        usaTalla: true,
+        esPrenda: true,
+        img: `./assets/img/hoodies/hoodie1.png`
+    },
+);
+ ... (tus demás bucles de playeras, hoodies, etc.)*/
+
+
+ catalogoSublimados.push(
+    {
+        id: `sub-parejas-1`,
+        nombre: `Playera para parejas Diseño 1`,
+        categoria: ['nuevo', 'playeras', 'parejas'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 180,
+        usaTalla: true,
+        esPrenda: true,
+        img: `./assets/img/playeras/parejas/ppromo1.png`
+    },
+    {
+        id: `sub-parejas-2`,
+        nombre: `Playera para parejas Diseño 2`,
+        categoria: ['nuevo', 'playeras', 'parejas'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 180,
+        usaTalla: true,
+        esPrenda: true,
+        img: `./assets/img/playeras/parejas/ppromo2.png`
+    },
+    
+);
+//Hoodies nuevas (hoodie12.png a hoodie20.png)
+for (let i = 12; i <= 20; i++) {
+    catalogoSublimados.push({
+        id: `sub-hoodie-${i}`,
+        nombre: `Hoodie Sublimada Diseño #${i}`,
+        categoria: ['nuevo', 'hoodies'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 450,
+        usaTalla: true,
+        esPrenda: true,
+        img: `./assets/img/hoodies/hoodie${i}.png`
+    });
+}
+// Playeras nuevas (playera12.png a playera31.png)
+for (let i = 13; i <= 31; i++) {
+    catalogoSublimados.push({
+        id: `sub-playera-${i}`,
+        nombre: `Playera Sublimada Diseño #${i}`,
+        categoria: ['nuevo', 'playeras'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 180,
+        usaTalla: true,
+        esPrenda: true,
+        img: `./assets/img/playeras/playera${i}.png`
+    });
+}
 
 // 1. Playeras (playera1.png a playera12.png)
 for (let i = 1; i <= 12; i++) {
@@ -94,7 +169,45 @@ document.addEventListener('DOMContentLoaded', () => {
     mostrarSublimados(catalogoSublimados);
     configurarEventosSublimados();
     sincronizarVistaCarrito();
+    actualizarContadoresCategorias();
 });
+
+// NUEVA FUNCIÓN PARA ACTUALIZAR LOS CONTADORES DE LOS BOTONES
+function actualizarContadoresCategorias() {
+    const botones = document.querySelectorAll('.filter-chip');
+    
+    botones.buttonText = botones.forEach(btn => {
+        const cat = btn.getAttribute('data-categoria');
+        if (!cat || cat === 'todos') return;
+
+        // Contar cuántos productos tienen esa categoría (soporta texto simple o listas múltiples)
+        const total = catalogoSublimados.filter(p => {
+            if (Array.isArray(p.categoria)) {
+                return p.categoria.includes(cat);
+            }
+            return p.categoria === cat;
+        }).length;
+
+        // Conservar el texto original del botón y agregar el número entre paréntesis
+        if (cat === 'nuevo') {
+            btn.innerHTML = `Lo Nuevo ✨ (${total})`;
+        } else if (cat === 'parejas') {
+            btn.innerHTML = `Para Parejas (${total})`;
+        } else if (cat === 'playeras') {
+            btn.innerHTML = `Playeras (${total})`;
+        } else if (cat === 'hoodies') {
+            btn.innerHTML = `Hoodies (${total})`;
+        } else if (cat === 'polo') {
+            btn.innerHTML = `Playeras Polo (${total})`;
+        } else if (cat === 'tazas') {
+            btn.innerHTML = `Tazas (${total})`;
+        } else if (cat === 'totebag') {
+            btn.innerHTML = `Tote Bags (${total})`;
+        } else if (cat === 'gorras') {
+            btn.innerHTML = `Gorras (${total})`;
+        }
+    });
+}
 
 function configurarEventosSublimados() {
     // Botones de categoría
@@ -168,7 +281,16 @@ function mostrarSublimados(lista) {
 function filtrarSublimados() {
     const texto = (document.getElementById('sub-search-input')?.value || '').toLowerCase().trim();
     const filtrados = catalogoSublimados.filter(p => {
-        const coincideCategoria = (categoriaActiva === 'todos') || (p.categoria === categoriaActiva);
+        // Comprobar si coincide con la categoría activa (soporta tanto texto simple como listas múltiples)
+        let coincideCategoria = false;
+        if (categoriaActiva === 'todos') {
+            coincideCategoria = true;
+        } else if (Array.isArray(p.categoria)) {
+            coincideCategoria = p.categoria.includes(categoriaActiva);
+        } else {
+            coincideCategoria = (p.categoria === categoriaActiva);
+        }
+
         const coincideTexto = p.nombre.toLowerCase().includes(texto) || p.etiqueta.toLowerCase().includes(texto);
         return coincideCategoria && coincideTexto;
     });
