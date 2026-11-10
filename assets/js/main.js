@@ -320,22 +320,21 @@ function renderProductDetailPage() {
     const elTipoPlayera = document.getElementById('tipo-playera');
 
     // Identificar productos para mostrar menús
-    // Aseguramos que la categoría se lea correctamente desde el ID del producto
     if (esSublimado && typeof rawId === 'string') {
         categoriaSublimado = rawId.split('-')[1] || '';
     }
 
+    const esPareja = categoriaSublimado === 'parejas' || categoriaSublimado === 'pareja';
     const esPoliesterPolo = product.id === 6 || product.name.toLowerCase().includes("poliéster") || categoriaSublimado === 'polo';
-    
-    // Hacemos que reconozca como "básica" tanto al ID 1 como a cualquier playera o diseño de parejas del catálogo nuevo
-    const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera' || categoriaSublimado === 'parejas' || categoriaSublimado === 'pareja' || categoriaSublimado === 'nuevo';
-    
+    const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera' || categoriaSublimado === 'nuevo' || esPareja;
     const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie") || categoriaSublimado === 'hoodie';
-    
-    // Identificar si es Accesorio (Productos sin talla ni color configurable)
     const esAccesorios = product.id === 3 || product.id === 4 || product.id === 5 || ['taza', 'gorra', 'totebag'].includes(categoriaSublimado);
-    const requiereGenero = esPoliesterPolo || esBasica || esHoodie;
-    const requiereTipoPlayera = esPoliesterPolo || esBasica; 
+
+    // Si es pareja, NO requerimos seleccionar hombre/mujer individualmente
+    const requiereGenero = (esPoliesterPolo || esBasica || esHoodie) && !esPareja;
+    
+    // ACTIVAMOS EL MENÚ DE TIPO DE PLAYERA PARA PAREJAS
+    const requiereTipoPlayera = (esPoliesterPolo || esBasica || esPareja); 
 
     // Ocultar TOTALMENTE Talla y Color si es accesorio
     if (sizeSelect && sizeSelect.parentElement) {
@@ -372,15 +371,48 @@ function renderProductDetailPage() {
         }
     }
 
+    // --- INYECTAR SELECTOR DE TALLA PARA ELLA SI ES PAREJA ---
+    if (esPareja && sizeSelect && sizeSelect.parentElement) {
+        const labels = sizeSelect.parentElement.getElementsByTagName('label');
+        if (labels.length > 0) labels[0].innerText = "Selecciona la Talla de Él:";
+        else {
+            const newLabel = document.createElement('label');
+            newLabel.innerText = "Selecciona la Talla de Él:";
+            newLabel.style.display = "block";
+            sizeSelect.parentElement.insertBefore(newLabel, sizeSelect);
+        }
+
+        if (!document.getElementById('detail-size-ella')) {
+            const ellaDiv = document.createElement('div');
+            ellaDiv.style.marginTop = "15px";
+            ellaDiv.innerHTML = `
+                <label style="display:block; margin-bottom:5px; color:#333;">Selecciona la Talla de Ella:</label>
+                <select id="detail-size-ella" style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc; font-family: inherit; font-size: 1rem; background-color: #fff;">
+                    <option value="">Selecciona una opción</option>
+                </select>
+            `;
+            sizeSelect.parentElement.appendChild(ellaDiv);
+        }
+    }
+
     function loadSizes() {
         if (!sizeSelect) return;
         let sizeList = Array.isArray(product.sizes) ? product.sizes : [product.sizes];
-        sizeSelect.innerHTML = sizeList.map(s => `<option value="${s}">${s}</option>`).join('');
+        const optionsHtml = sizeList.map(s => `<option value="${s}">${s}</option>`).join('');
+        
+        sizeSelect.innerHTML = `<option value="" disabled selected>Selecciona una opción</option>` + optionsHtml;
+
+        const sizeElla = document.getElementById('detail-size-ella');
+        if (sizeElla) {
+            sizeElla.innerHTML = `<option value="" disabled selected>Selecciona una opción</option>` + optionsHtml;
+            sizeElla.disabled = false;
+        }
     }
 
     function updateFormState() {
         const selectedGen = elGenero ? elGenero.value : '';
 
+        // Si requiere género Y no lo han seleccionado, bloqueamos todo
         if (requiereGenero && !selectedGen) {
             if (elTipoPlayera) {
                 elTipoPlayera.disabled = true;
@@ -399,30 +431,41 @@ function renderProductDetailPage() {
             if (esBasica && !esSublimado) document.getElementById('detail-img').src = product.image;
             
         } else {
+            // ESTADO HABILITADO (Las playeras de parejas entran directo aquí)
+            
+            // 1. Habilitamos y mostramos Tipo de Playera
             if (elTipoPlayera && requiereTipoPlayera) {
-                if (elTipoPlayera.disabled) {
-                    elTipoPlayera.disabled = false;
+                elTipoPlayera.disabled = false;
+                if (grupoTipoPlayera) grupoTipoPlayera.style.display = 'block'; 
+                
+                if (elTipoPlayera.innerHTML.includes("Primero selecciona") || elTipoPlayera.options.length <= 1) {
                     if (esPoliesterPolo) {
                         elTipoPlayera.innerHTML = `<option value="">Selecciona una opción</option><option value="Playera Básica">Playera Básica</option><option value="Playera Tipo Polo">Playera Tipo Polo</option>`;
-                    } else if (esBasica) {
+                    } else {
                         elTipoPlayera.innerHTML = `<option value="" disabled selected>Selecciona una opción</option><option value="Normal (Cuello Redondo)">Normal (Cuello Redondo)</option><option value="Tipo Polo">Tipo Polo</option>`;
                     }
                 }
             }
 
-            if (sizeSelect && sizeSelect.disabled && !esAccesorios) {
+            // 2. Habilitamos Tallas
+            if (sizeSelect && !esAccesorios) {
                 sizeSelect.disabled = false;
-                loadSizes();
+                if (sizeSelect.innerHTML.includes("Primero selecciona") || sizeSelect.options.length <= 1) {
+                    loadSizes();
+                }
             }
 
+            // 3. Habilitamos Color
             if (colorSelect && !esSublimado && !esAccesorios) {
                 colorSelect.disabled = false;
-                let availableColors = [];
-                if (esPoliesterPolo && colorMap.polo && colorMap.polo[selectedGen]) availableColors = colorMap.polo[selectedGen];
-                else if (esBasica && colorMap.basica && colorMap.basica[selectedGen]) availableColors = colorMap.basica[selectedGen];
-                else if (esHoodie && colorMap.hoodie && colorMap.hoodie[selectedGen]) availableColors = colorMap.hoodie[selectedGen];
-                else availableColors = Array.isArray(product.colors) ? product.colors : ["Estándar"];
-                colorSelect.innerHTML = availableColors.map(c => `<option value="${c}">${c}</option>`).join('');
+                if (colorSelect.innerHTML.includes("Primero selecciona") || colorSelect.options.length <= 1) {
+                    let availableColors = [];
+                    if (esPoliesterPolo && colorMap.polo && colorMap.polo[selectedGen]) availableColors = colorMap.polo[selectedGen];
+                    else if (esBasica && colorMap.basica && colorMap.basica[selectedGen]) availableColors = colorMap.basica[selectedGen];
+                    else if (esHoodie && colorMap.hoodie && colorMap.hoodie[selectedGen]) availableColors = colorMap.hoodie[selectedGen];
+                    else availableColors = Array.isArray(product.colors) ? product.colors : ["Estándar"];
+                    colorSelect.innerHTML = availableColors.map(c => `<option value="${c}">${c}</option>`).join('');
+                }
             }
         }
     }
@@ -454,7 +497,7 @@ function renderProductDetailPage() {
         addBtn.parentNode.replaceChild(newAddBtn, addBtn);
         newAddBtn.addEventListener('click', () => {
             let generoSeleccionado = '';
-            if (elGenero && requiereGenero) {
+            if (requiereGenero && elGenero) {
                 generoSeleccionado = elGenero.value;
                 if (!generoSeleccionado) return showToast("⚠️ Por favor selecciona para quién es la prenda.");
             }
@@ -464,10 +507,23 @@ function renderProductDetailPage() {
                 if (!tipoSeleccionado || elTipoPlayera.disabled) return showToast("⚠️ Por favor selecciona el tipo de playera.");
             }
             
-            const selectedSize = esAccesorios ? product.sizes[0] : (sizeSelect ? sizeSelect.value : 'Única');
+            let selectedSize = '';
+            const sizeEllaSelect = document.getElementById('detail-size-ella');
+
+            // --- LÓGICA DE VALIDACIÓN Y CARRITO PARA PAREJAS ---
+            if (esPareja) {
+                if (!sizeSelect.value || (sizeEllaSelect && !sizeEllaSelect.value)) {
+                    return showToast("⚠️ Por favor selecciona ambas tallas (Él y Ella).");
+                }
+                // Fusionamos las dos tallas en una sola línea para el carrito
+                selectedSize = `Él: ${sizeSelect.value} | Ella: ${sizeEllaSelect.value}`;
+            } else {
+                selectedSize = esAccesorios ? product.sizes[0] : (sizeSelect ? sizeSelect.value : 'Única');
+                if (!esAccesorios && (!selectedSize || sizeSelect.disabled)) return showToast("⚠️ Por favor selecciona la talla.");
+            }
+
             const selectedColor = (esSublimado || esAccesorios) ? 'Predeterminado' : (colorSelect ? colorSelect.value : 'Estándar');
 
-            if (!esAccesorios && (!selectedSize || sizeSelect.disabled)) return showToast("⚠️ Por favor selecciona la talla.");
             if (!esAccesorios && !esSublimado && !selectedColor) return showToast("⚠️ Por favor selecciona el color.");
 
             const customInput = document.getElementById('detail-custom');
