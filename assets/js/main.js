@@ -320,13 +320,20 @@ function renderProductDetailPage() {
     const elTipoPlayera = document.getElementById('tipo-playera');
 
     // Identificar productos para mostrar menús
+    // Aseguramos que la categoría se lea correctamente desde el ID del producto
+    if (esSublimado && typeof rawId === 'string') {
+        categoriaSublimado = rawId.split('-')[1] || '';
+    }
+
     const esPoliesterPolo = product.id === 6 || product.name.toLowerCase().includes("poliéster") || categoriaSublimado === 'polo';
-    const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera';
+    
+    // Hacemos que reconozca como "básica" tanto al ID 1 como a cualquier playera o diseño de parejas del catálogo nuevo
+    const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera' || categoriaSublimado === 'parejas' || categoriaSublimado === 'pareja' || categoriaSublimado === 'nuevo';
+    
     const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie") || categoriaSublimado === 'hoodie';
     
     // Identificar si es Accesorio (Productos sin talla ni color configurable)
     const esAccesorios = product.id === 3 || product.id === 4 || product.id === 5 || ['taza', 'gorra', 'totebag'].includes(categoriaSublimado);
-
     const requiereGenero = esPoliesterPolo || esBasica || esHoodie;
     const requiereTipoPlayera = esPoliesterPolo || esBasica; 
 
