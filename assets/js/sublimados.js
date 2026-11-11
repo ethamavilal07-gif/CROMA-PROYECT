@@ -29,6 +29,40 @@ catalogoSublimados.push(
  ... (tus demás bucles de playeras, hoodies, etc.)*/
 
 
+//Esferas navideñas (esfera-basica.jpeg y esfera-decorada.jpeg)
+catalogoSublimados.push(
+    {
+        id: `sub-producto-navideño-1`,
+        nombre: `Esfera Navideña Basica`,
+        categoria: ['nuevo', 'navidad'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 50,
+        usaTalla: false,
+        esPrenda: false,
+        img: `./assets/img/productos-navideños/esfera1-basica.jpeg`
+    },
+    {
+        id: `sub-producto-navideño-2`,
+        nombre: `Esfera Navideña Decorada`,
+        categoria: ['nuevo', 'navidad'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: 65,
+        usaTalla: false,
+        esPrenda: false,
+        img: `./assets/img/productos-navideños/esfera2-decorada.jpeg`
+    },
+    {
+        id: `sub-producto-navideño-3`,
+        nombre: `Esfera Navideña Especial`,
+        categoria: ['nuevo', 'navidad'],
+        etiqueta: '¡Lo Nuevo!',
+        precio: "Queda a cotizacion, dependiende del diseño",
+        usaTalla: false,
+        esPrenda: false,
+        img: `./assets/img/productos-navideños/esfera3-navideñas.jpeg`
+    }
+    
+);
  catalogoSublimados.push(
     {
         id: `sub-parejas-1`,

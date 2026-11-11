@@ -1,6 +1,43 @@
 // BASE DE DATOS DE PRODUCTOS CON MUESTRAS DEDICADAS
 const products = [
     {
+        id: 7,
+        name: "Esfera Navideña Personalizada",
+        price: 50,
+        image: "assets/img/productos-navideños/esfera1-basica.jpeg",
+        description: "Dale un toque mágico y único a tu arbolito de Navidad con nuestras esferas personalizadas. Perfectas para incluir nombres, pequeñas frases o dedicatorias especiales.",
+        sizes: ["Única"],
+        colors: ["Predeterminado"],
+        gallery: [
+            "assets/img/productos-navideños/esfera1-basica.jpeg"
+        ]
+    },
+    {
+        id: 8,
+        name: "Esfera Navideña Decorada",
+        price: 65,
+        image: "assets/img/productos-navideños/esfera2-decorada.jpeg",
+        description: "Dale un toque mágico y único a tu arbolito de Navidad con nuestras esferas personalizadas. Perfectas para incluir nombres, pequeñas frases o dedicatorias especiales.",
+        sizes: ["Única"],
+        colors: ["Predeterminado"],
+        gallery: [
+            "assets/img/productos-navideños/esfera2-decorada.jpeg"
+            
+        ]
+    },
+    {
+        id: 9,
+        name: "Esfera Navideña Especial",
+        price: "Queda a cotizacion, dependiendo del diseño",
+        image: "assets/img/productos-navideños/esfera3-navideñas.jpeg",
+        description: "Dale un toque mágico y único a tu arbolito de Navidad con nuestras esferas personalizadas. Perfectas para incluir nombres, pequeñas frases o dedicatorias especiales.",
+        sizes: ["Única"],
+        colors: ["Predeterminado"],
+        gallery: [
+            "assets/img/productos-navideños/esfera3-navideñas.jpeg"
+        ]
+    },
+    {
         id: 1,
         name: "Playera Básico Personalizada",
         price: 180,
@@ -235,9 +272,11 @@ function renderProductDetailPage() {
     if (typeof rawId === 'string' && rawId.startsWith('sub-')) {
         esSublimado = true;
         
-        const partes = rawId.split('-');
-        const cat = partes[1]; // ej. 'parejas', 'playera', 'hoodie', etc.
-        const num = partes[2] || partes[partes.length - 1]; // el número del diseño
+        // Decodificamos por si vienen caracteres especiales como la ñ
+        const idLimpio = decodeURIComponent(rawId);
+        const partes = idLimpio.split('-');
+        const cat = partes[1]; 
+        const num = partes[partes.length - 1]; 
 
         let pName = "Producto Sublimado";
         let pPrice = 180;
@@ -277,6 +316,27 @@ function renderProductDetailPage() {
             pPrice = 150;
             pSizes = ["Ajustable"];
             imgUrl = `./assets/img/gorras/gorra${num}.png`;
+        } else if (idLimpio.includes('navideno') || idLimpio.includes('navideño') || idLimpio.includes('navidaño') || idLimpio.includes('esfera') || cat === 'producto') {
+            // LÓGICA DEFINITIVA PARA ESFERAS NAVIDEÑAS
+            pSizes = ["Única"];
+            
+            if (num === '1') {
+                pName = `Esfera Navideña Básica`;
+                pPrice = 50;
+                imgUrl = `./assets/img/productos-navideños/esfera1-basica.jpeg`;
+            } else if (num === '2') {
+                pName = `Esfera Navideña Decorada`;
+                pPrice = 65;
+                imgUrl = `./assets/img/productos-navideños/esfera2-decorada.jpeg`;
+            } else if (num === '3') {
+                pName = `Esfera Navideña Especial (A cotizar)`;
+                pPrice = 0; 
+                imgUrl = `./assets/img/productos-navideños/esfera3-navideñas.jpeg`;
+            } else {
+                pName = `Producto Navideño #${num}`;
+                pPrice = 50;
+                imgUrl = `./assets/img/productos-navideños/esfera${num}.jpeg`; 
+            }
         }
 
         product = {
@@ -295,8 +355,11 @@ function renderProductDetailPage() {
     }
 
     // Cargar información inicial
-    document.getElementById('detail-img').src = product.image;
-    document.getElementById('detail-img').alt = product.name;
+    const detailImg = document.getElementById('detail-img');
+    if (detailImg) {
+        detailImg.src = product.image;
+        detailImg.alt = product.name;
+    }
     titleEl.innerText = product.name;
     
     let currentPrice = product.price;
@@ -321,19 +384,23 @@ function renderProductDetailPage() {
 
     // Identificar productos para mostrar menús
     if (esSublimado && typeof rawId === 'string') {
-        categoriaSublimado = rawId.split('-')[1] || '';
+        const idLimpio = decodeURIComponent(rawId);
+        categoriaSublimado = idLimpio.split('-')[1] || '';
+        
+        // Si detecta que es producto navideño, forzamos la categoría a "navideño"
+        if (idLimpio.includes('navideno') || idLimpio.includes('navideño') || idLimpio.includes('navidaño') || idLimpio.includes('esfera') || categoriaSublimado === 'producto') {
+            categoriaSublimado = 'navideño';
+        }
     }
 
     const esPareja = categoriaSublimado === 'parejas' || categoriaSublimado === 'pareja';
     const esPoliesterPolo = product.id === 6 || product.name.toLowerCase().includes("poliéster") || categoriaSublimado === 'polo';
     const esBasica = product.id === 1 || product.name.toLowerCase().includes("básico") || categoriaSublimado === 'playera' || categoriaSublimado === 'nuevo' || esPareja;
     const esHoodie = product.id === 2 || product.name.toLowerCase().includes("hoodie") || categoriaSublimado === 'hoodie';
-    const esAccesorios = product.id === 3 || product.id === 4 || product.id === 5 || ['taza', 'gorra', 'totebag'].includes(categoriaSublimado);
+    const esAccesorios = product.id === 3 || product.id === 4 || product.id === 5 || product.id === 7 || product.id === 8 || product.id === 9 || ['taza', 'gorra', 'totebag', 'navideño'].includes(categoriaSublimado);
 
     // Si es pareja, NO requerimos seleccionar hombre/mujer individualmente
     const requiereGenero = (esPoliesterPolo || esBasica || esHoodie) && !esPareja;
-    
-    // ACTIVAMOS EL MENÚ DE TIPO DE PLAYERA PARA PAREJAS
     const requiereTipoPlayera = (esPoliesterPolo || esBasica || esPareja); 
 
     // Ocultar TOTALMENTE Talla y Color si es accesorio
@@ -393,6 +460,12 @@ function renderProductDetailPage() {
             `;
             sizeSelect.parentElement.appendChild(ellaDiv);
         }
+    } else if (!esPareja && sizeSelect && sizeSelect.parentElement) {
+        // Limpiar el selector de ella si navegamos a otro producto que no es pareja
+        const labels = sizeSelect.parentElement.getElementsByTagName('label');
+        if (labels.length > 0) labels[0].innerText = "Selecciona Tu Talla:";
+        const ellaDiv = document.getElementById('detail-size-ella');
+        if (ellaDiv) ellaDiv.parentElement.remove();
     }
 
     function loadSizes() {
@@ -431,9 +504,7 @@ function renderProductDetailPage() {
             if (esBasica && !esSublimado) document.getElementById('detail-img').src = product.image;
             
         } else {
-            // ESTADO HABILITADO (Las playeras de parejas entran directo aquí)
-            
-            // 1. Habilitamos y mostramos Tipo de Playera
+            // ESTADO HABILITADO
             if (elTipoPlayera && requiereTipoPlayera) {
                 elTipoPlayera.disabled = false;
                 if (grupoTipoPlayera) grupoTipoPlayera.style.display = 'block'; 
@@ -447,7 +518,6 @@ function renderProductDetailPage() {
                 }
             }
 
-            // 2. Habilitamos Tallas
             if (sizeSelect && !esAccesorios) {
                 sizeSelect.disabled = false;
                 if (sizeSelect.innerHTML.includes("Primero selecciona") || sizeSelect.options.length <= 1) {
@@ -455,7 +525,6 @@ function renderProductDetailPage() {
                 }
             }
 
-            // 3. Habilitamos Color
             if (colorSelect && !esSublimado && !esAccesorios) {
                 colorSelect.disabled = false;
                 if (colorSelect.innerHTML.includes("Primero selecciona") || colorSelect.options.length <= 1) {
@@ -510,12 +579,10 @@ function renderProductDetailPage() {
             let selectedSize = '';
             const sizeEllaSelect = document.getElementById('detail-size-ella');
 
-            // --- LÓGICA DE VALIDACIÓN Y CARRITO PARA PAREJAS ---
             if (esPareja) {
                 if (!sizeSelect.value || (sizeEllaSelect && !sizeEllaSelect.value)) {
                     return showToast("⚠️ Por favor selecciona ambas tallas (Él y Ella).");
                 }
-                // Fusionamos las dos tallas en una sola línea para el carrito
                 selectedSize = `Él: ${sizeSelect.value} | Ella: ${sizeEllaSelect.value}`;
             } else {
                 selectedSize = esAccesorios ? product.sizes[0] : (sizeSelect ? sizeSelect.value : 'Única');
