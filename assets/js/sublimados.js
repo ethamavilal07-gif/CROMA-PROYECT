@@ -56,7 +56,7 @@ catalogoSublimados.push(
         nombre: `Esfera Navideña Especial`,
         categoria: ['nuevo', 'navidad'],
         etiqueta: '¡Lo Nuevo!',
-        precio: "Queda a cotizacion, dependiende del diseño",
+        precio: "Queda a cotización, dependiendo del diseño",
         usaTalla: false,
         esPrenda: false,
         img: `./assets/img/productos-navideños/esfera3-navideñas.jpeg`
@@ -66,20 +66,20 @@ catalogoSublimados.push(
  catalogoSublimados.push(
     {
         id: `sub-parejas-1`,
-        nombre: `Playera para parejas Diseño 1`,
+        nombre: `Combo pareja 1`,
         categoria: ['nuevo', 'playeras', 'parejas'],
         etiqueta: '¡Lo Nuevo!',
-        precio: 180,
+        precio: 799,
         usaTalla: true,
         esPrenda: true,
         img: `./assets/img/playeras/parejas/ppromo1.png`
     },
     {
         id: `sub-parejas-2`,
-        nombre: `Playera para parejas Diseño 2`,
+        nombre: `Combo pareja 2`,
         categoria: ['nuevo', 'playeras', 'parejas'],
         etiqueta: '¡Lo Nuevo!',
-        precio: 180,
+        precio: 799,
         usaTalla: true,
         esPrenda: true,
         img: `./assets/img/playeras/parejas/ppromo2.png`
@@ -301,7 +301,7 @@ function mostrarSublimados(lista) {
             <div class="sub-info">
                 <span class="sub-category-tag">${item.etiqueta}</span>
                 <h3 class="sub-title">${item.nombre}</h3>
-                <p class="sub-price">$${item.precio} MXN</p>
+                <p class="sub-price">${typeof item.precio === 'number' ? `$${item.precio} MXN` : item.precio}</p>
                 <div class="sub-actions">
                    <button type="button" class="btn-custom-sub btn-add" onclick="window.location.href='producto.html?id=${item.id}'">
                         Personalizar 🎨
@@ -339,7 +339,9 @@ function abrirPersonalizador(id) {
     document.getElementById('cust-img').src = prod.img;
     document.getElementById('cust-cat').textContent = prod.etiqueta;
     document.getElementById('cust-title').textContent = prod.nombre;
-    document.getElementById('cust-price').textContent = `$${prod.precio} MXN`;
+    document.getElementById('cust-price').textContent = typeof prod.precio === 'number'
+        ? `$${prod.precio} MXN`
+        : prod.precio;
 
     const sizeGroup = document.getElementById('cust-size-group');
     sizeGroup.style.display = prod.usaTalla ? 'block' : 'none';

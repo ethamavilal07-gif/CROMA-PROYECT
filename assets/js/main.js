@@ -28,7 +28,7 @@ const products = [
     {
         id: 9,
         name: "Esfera Navideña Especial",
-        price: "Queda a cotizacion, dependiendo del diseño",
+        price: "Queda a cotización, dependiendo del diseño",
         image: "assets/img/productos-navideños/esfera3-navideñas.jpeg",
         description: "Dale un toque mágico y único a tu arbolito de Navidad con nuestras esferas personalizadas. Perfectas para incluir nombres, pequeñas frases o dedicatorias especiales.",
         sizes: ["Única"],
@@ -202,7 +202,7 @@ function renderHomeProducts(productList = products) {
             <div onclick="goToCustomizer(${p.id})">
                 <img src="${p.image}" alt="${p.name}" class="product-img">
                 <h3>${p.name}</h3>
-                <p class="product-price">$${p.price} MXN</p>
+                <p class="product-price">${typeof p.price === 'number' ? `$${p.price} MXN` : p.price}</p>
             </div>
             <button class="btn-add" onclick="goToCustomizer(${p.id})">Personalizar 🎨</button>
         `;
@@ -224,7 +224,7 @@ function renderFullCatalog() {
             <div>
                 <img src="${p.image}" alt="${p.name}" class="product-img" style="max-height: 200px; object-fit: contain; margin-bottom: 15px;">
                 <h3 style="margin-bottom: 8px;">${p.name}</h3>
-                <p class="product-price" style="font-weight: 600; color: #6b1d2f; font-size: 1.2rem; margin-bottom: 10px;">$${p.price} MXN</p>
+                <p class="product-price" style="font-weight: 600; color: #6b1d2f; font-size: 1.2rem; margin-bottom: 10px;">${typeof p.price === 'number' ? `$${p.price} MXN` : p.price}</p>
                 <p style="font-size: 0.85rem; color: #555; text-align: justify; line-height: 1.4; margin-bottom: 15px;">${p.description}</p>
             </div>
             <button class="btn-add" onclick="goToCustomizer(${p.id})" style="width: 100%; margin-top: 10px;">Personalizar 🎨</button>
@@ -286,7 +286,7 @@ function renderProductDetailPage() {
         // Asignar nombre, precio y ruta exacta según la categoría del ID
         if (cat === 'parejas' || cat === 'pareja') {
             pName = `Playera para parejas Diseño ${num}`;
-            pPrice = 180;
+            pPrice = 799;
             imgUrl = `./assets/img/playeras/parejas/ppromo${num}.png`;
         } else if (cat === 'playera' || cat === 'nuevo') {
             pName = `Playera Sublimada Diseño #${num}`;
@@ -330,7 +330,7 @@ function renderProductDetailPage() {
                 imgUrl = `./assets/img/productos-navideños/esfera2-decorada.jpeg`;
             } else if (num === '3') {
                 pName = `Esfera Navideña Especial (A cotizar)`;
-                pPrice = 0; 
+                pPrice = "Queda a cotización, dependiendo del diseño";
                 imgUrl = `./assets/img/productos-navideños/esfera3-navideñas.jpeg`;
             } else {
                 pName = `Producto Navideño #${num}`;
@@ -368,8 +368,9 @@ function renderProductDetailPage() {
 
     function updatePriceDisplay(newPrice) {
         currentPrice = newPrice;
-        if (priceMobile) priceMobile.innerText = `$${newPrice} MXN`;
-        if (priceCard) priceCard.innerText = `$${newPrice} MXN`;
+        const formattedPrice = typeof newPrice === 'number' ? `$${newPrice} MXN` : newPrice;
+        if (priceMobile) priceMobile.innerText = formattedPrice;
+        if (priceCard) priceCard.innerText = formattedPrice;
     }
 
     updatePriceDisplay(product.price);
